@@ -1,0 +1,295 @@
+   1               		.file	"umeter_adc.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__ = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.section	.text.adc_init,"ax",@progbits
+  17               	.global	adc_init
+  19               	adc_init:
+  20               	.LFB0:
+  21               	.LSM0:
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24               	/* stack size = 0 */
+  25               	.L__stack_usage = 0
+  26               	.LSM1:
+  27 0000 ECE7      		ldi r30,lo8(124)
+  28 0002 F0E0      		ldi r31,hi8(124)
+  29 0004 8081      		ld r24,Z
+  30 0006 806C      		ori r24,lo8(-64)
+  31 0008 8083      		st Z,r24
+  32               	.LSM2:
+  33 000a 8081      		ld r24,Z
+  34 000c 8F7D      		andi r24,lo8(-33)
+  35 000e 8083      		st Z,r24
+  36               	.LSM3:
+  37 0010 EAE7      		ldi r30,lo8(122)
+  38 0012 F0E0      		ldi r31,hi8(122)
+  39 0014 8081      		ld r24,Z
+  40 0016 8068      		ori r24,lo8(-128)
+  41 0018 8083      		st Z,r24
+  42               	.LSM4:
+  43 001a 8081      		ld r24,Z
+  44 001c 8F7D      		andi r24,lo8(-33)
+  45 001e 8083      		st Z,r24
+  46               	.LSM5:
+  47 0020 8081      		ld r24,Z
+  48 0022 877F      		andi r24,lo8(-9)
+  49 0024 8083      		st Z,r24
+  50               	.LSM6:
+  51 0026 8081      		ld r24,Z
+  52 0028 8760      		ori r24,lo8(7)
+  53 002a 8083      		st Z,r24
+  54               	.LSM7:
+  55 002c 80B3      		in r24,48-32
+  56 002e 8C7C      		andi r24,lo8(-52)
+  57 0030 80BB      		out 48-32,r24
+  58               	.LSM8:
+  59 0032 81B3      		in r24,49-32
+  60 0034 8C7C      		andi r24,lo8(-52)
+  61 0036 81BB      		out 49-32,r24
+  62               	/* epilogue start */
+  63               	.LSM9:
+  64 0038 0895      		ret
+  65               	.LFE0:
+  67               		.section	.text.adc_conversion,"ax",@progbits
+  68               	.global	adc_conversion
+  70               	adc_conversion:
+  71               	.LFB1:
+  72               	.LSM10:
+  73               	/* prologue: function */
+  74               	/* frame size = 0 */
+  75               	/* stack size = 0 */
+  76               	.L__stack_usage = 0
+  77               	.LSM11:
+  78 0000 8091 7A00 		lds r24,122
+  79 0004 8065      		ori r24,lo8(80)
+  80 0006 8093 7A00 		sts 122,r24
+  81               	.L3:
+  82               	.LSM12:
+  83 000a 8091 7A00 		lds r24,122
+  84 000e 84FF      		sbrs r24,4
+  85 0010 00C0      		rjmp .L3
+  86               	.LSM13:
+  87 0012 8091 7800 		lds r24,120
+  88 0016 9091 7900 		lds r25,121
+  89 001a 392F      		mov r19,r25
+  90 001c 20E0      		ldi r18,lo8(0)
+  91 001e 2070      		andi r18,lo8(768)
+  92 0020 3370      		andi r19,hi8(768)
+  93 0022 90E0      		ldi r25,lo8(0)
+  94 0024 282B      		or r18,r24
+  95 0026 392B      		or r19,r25
+  96               	.LSM14:
+  97 0028 C901      		movw r24,r18
+  98               	/* epilogue start */
+  99 002a 0895      		ret
+ 100               	.LFE1:
+ 102               		.section	.text.select_adc,"ax",@progbits
+ 103               	.global	select_adc
+ 105               	select_adc:
+ 106               	.LFB2:
+ 107               	.LSM15:
+ 108               	.LVL0:
+ 109               	/* prologue: function */
+ 110               	/* frame size = 0 */
+ 111               	/* stack size = 0 */
+ 112               	.L__stack_usage = 0
+ 113               	.LSM16:
+ 114 0000 ECE7      		ldi r30,lo8(124)
+ 115 0002 F0E0      		ldi r31,hi8(124)
+ 116 0004 9081      		ld r25,Z
+ 117 0006 8F71      		andi r24,lo8(31)
+ 118               	.LVL1:
+ 119 0008 907E      		andi r25,lo8(-32)
+ 120 000a 892B      		or r24,r25
+ 121 000c 8083      		st Z,r24
+ 122               	/* epilogue start */
+ 123               	.LSM17:
+ 124 000e 0895      		ret
+ 125               	.LFE2:
+ 127               		.section	.text.select_sensor,"ax",@progbits
+ 128               	.global	select_sensor
+ 130               	select_sensor:
+ 131               	.LFB3:
+ 132               	.LSM18:
+ 133               	.LVL2:
+ 134               	/* prologue: function */
+ 135               	/* frame size = 0 */
+ 136               	/* stack size = 0 */
+ 137               	.L__stack_usage = 0
+ 138               	.LSM19:
+ 139 0000 8230      		cpi r24,2
+ 140 0002 9105      		cpc r25,__zero_reg__
+ 141 0004 01F0      		breq .L9
+ 142 0006 8330      		cpi r24,3
+ 143 0008 9105      		cpc r25,__zero_reg__
+ 144 000a 04F4      		brge .L12
+ 145 000c 8130      		cpi r24,1
+ 146 000e 9105      		cpc r25,__zero_reg__
+ 147 0010 01F4      		brne .L6
+ 148 0012 00C0      		rjmp .L14
+ 149               	.L12:
+ 150 0014 8330      		cpi r24,3
+ 151 0016 9105      		cpc r25,__zero_reg__
+ 152 0018 01F0      		breq .L10
+ 153 001a 8430      		cpi r24,4
+ 154 001c 9105      		cpc r25,__zero_reg__
+ 155 001e 01F4      		brne .L6
+ 156 0020 00C0      		rjmp .L15
+ 157               	.L14:
+ 158               	.LSM20:
+ 159 0022 80E0      		ldi r24,lo8(0)
+ 160               	.LVL3:
+ 161 0024 00C0      		rjmp .L13
+ 162               	.LVL4:
+ 163               	.L9:
+ 164               	.LSM21:
+ 165 0026 81E0      		ldi r24,lo8(1)
+ 166               	.LVL5:
+ 167 0028 00C0      		rjmp .L13
+ 168               	.LVL6:
+ 169               	.L10:
+ 170               	.LSM22:
+ 171 002a 84E0      		ldi r24,lo8(4)
+ 172               	.LVL7:
+ 173               	.L13:
+ 174 002c 0E94 0000 		call select_adc
+ 175               	.LSM23:
+ 176 0030 0895      		ret
+ 177               	.LVL8:
+ 178               	.L15:
+ 179               	.LSM24:
+ 180 0032 85E0      		ldi r24,lo8(5)
+ 181               	.LVL9:
+ 182 0034 0E94 0000 		call select_adc
+ 183               	.L6:
+ 184 0038 0895      		ret
+ 185               	.LFE3:
+ 187               		.data
+ 188               	.LC0:
+ 189 0000 2564 2E25 		.string	"%d.%03d "
+ 189      3033 6420 
+ 189      00
+ 190               		.section	.text.float2str,"ax",@progbits
+ 191               	.global	float2str
+ 193               	float2str:
+ 194               	.LFB4:
+ 195               	.LSM25:
+ 196               	.LVL10:
+ 197 0000 CF92      		push r12
+ 198 0002 DF92      		push r13
+ 199 0004 EF92      		push r14
+ 200 0006 FF92      		push r15
+ 201 0008 0F93      		push r16
+ 202 000a 1F93      		push r17
+ 203 000c CF93      		push r28
+ 204 000e DF93      		push r29
+ 205               	/* prologue: function */
+ 206               	/* frame size = 0 */
+ 207               	/* stack size = 8 */
+ 208               	.L__stack_usage = 8
+ 209 0010 7B01      		movw r14,r22
+ 210 0012 8C01      		movw r16,r24
+ 211 0014 EA01      		movw r28,r20
+ 212               	.LSM26:
+ 213 0016 0E94 0000 		call __fixsfsi
+ 214               	.LVL11:
+ 215               	.LSM27:
+ 216 001a 2DB7      		in r18,__SP_L__
+ 217 001c 3EB7      		in r19,__SP_H__
+ 218 001e 2850      		subi r18,lo8(-(-8))
+ 219 0020 3040      		sbci r19,hi8(-(-8))
+ 220 0022 0FB6      		in __tmp_reg__,__SREG__
+ 221 0024 F894      		cli
+ 222 0026 3EBF      		out __SP_H__,r19
+ 223 0028 0FBE      		out __SREG__,__tmp_reg__
+ 224 002a 2DBF      		out __SP_L__,r18
+ 225 002c CDB6      		in r12,__SP_L__
+ 226 002e DEB6      		in r13,__SP_H__
+ 227 0030 0894      		sec
+ 228 0032 C11C      		adc r12,__zero_reg__
+ 229 0034 D11C      		adc r13,__zero_reg__
+ 230 0036 EDB7      		in r30,__SP_L__
+ 231 0038 FEB7      		in r31,__SP_H__
+ 232 003a D283      		std Z+2,r29
+ 233 003c C183      		std Z+1,r28
+ 234 003e 20E0      		ldi r18,lo8(.LC0)
+ 235 0040 30E0      		ldi r19,hi8(.LC0)
+ 236 0042 F601      		movw r30,r12
+ 237 0044 3383      		std Z+3,r19
+ 238 0046 2283      		std Z+2,r18
+ 239 0048 7583      		std Z+5,r23
+ 240 004a 6483      		std Z+4,r22
+ 241               	.LSM28:
+ 242 004c 8827      		clr r24
+ 243 004e 77FD      		sbrc r23,7
+ 244 0050 8095      		com r24
+ 245 0052 982F      		mov r25,r24
+ 246               	.LVL12:
+ 247 0054 0E94 0000 		call __floatsisf
+ 248 0058 9B01      		movw r18,r22
+ 249 005a AC01      		movw r20,r24
+ 250 005c C801      		movw r24,r16
+ 251 005e B701      		movw r22,r14
+ 252 0060 0E94 0000 		call __subsf3
+ 253 0064 20E0      		ldi r18,lo8(0x447a0000)
+ 254 0066 30E0      		ldi r19,hi8(0x447a0000)
+ 255 0068 4AE7      		ldi r20,hlo8(0x447a0000)
+ 256 006a 54E4      		ldi r21,hhi8(0x447a0000)
+ 257 006c 0E94 0000 		call __mulsf3
+ 258 0070 0E94 0000 		call __fixsfsi
+ 259               	.LSM29:
+ 260 0074 F601      		movw r30,r12
+ 261 0076 7783      		std Z+7,r23
+ 262 0078 6683      		std Z+6,r22
+ 263 007a 0E94 0000 		call sprintf
+ 264 007e 2DB7      		in r18,__SP_L__
+ 265 0080 3EB7      		in r19,__SP_H__
+ 266 0082 285F      		subi r18,lo8(-(8))
+ 267 0084 3F4F      		sbci r19,hi8(-(8))
+ 268 0086 0FB6      		in __tmp_reg__,__SREG__
+ 269 0088 F894      		cli
+ 270 008a 3EBF      		out __SP_H__,r19
+ 271 008c 0FBE      		out __SREG__,__tmp_reg__
+ 272 008e 2DBF      		out __SP_L__,r18
+ 273               	/* epilogue start */
+ 274               	.LSM30:
+ 275 0090 DF91      		pop r29
+ 276 0092 CF91      		pop r28
+ 277               	.LVL13:
+ 278 0094 1F91      		pop r17
+ 279 0096 0F91      		pop r16
+ 280 0098 FF90      		pop r15
+ 281 009a EF90      		pop r14
+ 282               	.LVL14:
+ 283 009c DF90      		pop r13
+ 284 009e CF90      		pop r12
+ 285               	.LVL15:
+ 286 00a0 0895      		ret
+ 287               	.LFE4:
+ 345               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 umeter_adc.c
+     /tmp/ccozgvdi.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccozgvdi.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccozgvdi.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccozgvdi.s:5      *ABS*:0000000000000034 __CCP__
+     /tmp/ccozgvdi.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccozgvdi.s:7      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccozgvdi.s:19     .text.adc_init:0000000000000000 adc_init
+     /tmp/ccozgvdi.s:70     .text.adc_conversion:0000000000000000 adc_conversion
+     /tmp/ccozgvdi.s:105    .text.select_adc:0000000000000000 select_adc
+     /tmp/ccozgvdi.s:130    .text.select_sensor:0000000000000000 select_sensor
+     /tmp/ccozgvdi.s:193    .text.float2str:0000000000000000 float2str
+
+UNDEFINED SYMBOLS
+__fixsfsi
+__floatsisf
+__subsf3
+__mulsf3
+sprintf
+__do_copy_data

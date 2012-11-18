@@ -1,0 +1,657 @@
+   1               		.file	"MassStorage.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__ = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.section	.text.StreamCallback_AbortOnMassStoreReset,"ax",@progbits
+  17               	.global	StreamCallback_AbortOnMassStoreReset
+  19               	StreamCallback_AbortOnMassStoreReset:
+  20               	.LFB50:
+  21               	.LSM0:
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24               	/* stack size = 0 */
+  25               	.L__stack_usage = 0
+  26               	.LSM1:
+  27 0000 8091 0000 		lds r24,IsMassStoreReset
+  28               	/* epilogue start */
+  29               	.LSM2:
+  30 0004 0895      		ret
+  31               	.LFE50:
+  33               		.section	.text.data_logger_main,"ax",@progbits
+  34               	.global	data_logger_main
+  36               	data_logger_main:
+  37               	.LFB41:
+  38               	.LSM3:
+  39               	/* prologue: function */
+  40               	/* frame size = 0 */
+  41               	/* stack size = 0 */
+  42               	.L__stack_usage = 0
+  43               	.LSM4:
+  44 0000 0E94 0000 		call UMeter_Init
+  45               	.LSM5:
+  46 0004 0E94 0000 		call adc_init
+  47               	.L3:
+  48               	.LVL0:
+  49               	.LBB35:
+  50               	.LBB36:
+  51               	.LSM6:
+  52 0008 8FEF      		 ldi r24,lo8(3199999)
+  53 000a 93ED      	    ldi r25,hi8(3199999)
+  54 000c A0E3      	    ldi r26,hlo8(3199999)
+  55 000e 8150      	    1:subi r24,1
+  56 0010 9040      	    sbci r25,0
+  57 0012 A040      	    sbci r26,0
+  58 0014 01F4      	    brne 1b
+  59 0016 00C0      		rjmp .
+  60 0018 0000      		nop
+  61               	.LBE36:
+  62               	.LBE35:
+  63               	.LSM7:
+  64 001a 0E94 0000 		call UMeter_Task
+  65 001e 00C0      		rjmp .L3
+  66               	.LFE41:
+  68               		.section	.text.SetupHardware,"ax",@progbits
+  69               	.global	SetupHardware
+  71               	SetupHardware:
+  72               	.LFB42:
+  73               	.LSM8:
+  74               	/* prologue: function */
+  75               	/* frame size = 0 */
+  76               	/* stack size = 0 */
+  77               	.L__stack_usage = 0
+  78               	.LSM9:
+  79 0000 84B7      		in r24,84-32
+  80 0002 877F      		andi r24,lo8(-9)
+  81 0004 84BF      		out 84-32,r24
+  82               	.LSM10:
+  83 0006 88E1      		ldi r24,lo8(24)
+  84               	/* #APP */
+  85               	 ;  103 "MassStorage.c" 1
+  86 0008 0FB6      		in __tmp_reg__, __SREG__
+  87 000a F894      		cli
+  88 000c 8093 6000 		sts 96, r24
+  89 0010 1092 6000 		sts 96, __zero_reg__
+  90 0014 0FBE      		out __SREG__,__tmp_reg__
+  91               		
+  92               	 ;  0 "" 2
+  93               	.LVL1:
+  94               	/* #NOAPP */
+  95               	.LBB37:
+  96               	.LBB38:
+  97               	.LSM11:
+  98 0016 20E0      		ldi r18,lo8(0)
+  99 0018 90E8      		ldi r25,lo8(-128)
+ 100               	/* #APP */
+ 101               	 ;  1492 "/usr/lib/gcc/avr/4.5.3/../../../avr/include/avr/power.h" 1
+ 102 001a 0FB6      		in __tmp_reg__,__SREG__
+ 103 001c F894      		cli
+ 104 001e 9093 6100 		sts 97, r25
+ 105 0022 2093 6100 		sts 97, r18
+ 106 0026 0FBE      		out __SREG__, __tmp_reg__
+ 107               	 ;  0 "" 2
+ 108               	.LVL2:
+ 109               	/* #NOAPP */
+ 110               	.LBE38:
+ 111               	.LBE37:
+ 112               	.LBB39:
+ 113               	.LBB40:
+ 114               	.LBB41:
+ 115               	.LBB42:
+ 116               	.LSM12:
+ 117 0028 1092 C800 		sts 200,__zero_reg__
+ 118               	.LSM13:
+ 119 002c 8093 C900 		sts 201,r24
+ 120               	.LSM14:
+ 121 0030 86E0      		ldi r24,lo8(6)
+ 122 0032 8093 CA00 		sts 202,r24
+ 123               	.LSM15:
+ 124 0036 539A      		sbi 42-32,3
+ 125               	.LSM16:
+ 126 0038 5A9A      		sbi 43-32,2
+ 127               	.LSM17:
+ 128 003a 87E6      		ldi r24,lo8(103)
+ 129 003c 90E0      		ldi r25,hi8(103)
+ 130 003e 9093 CD00 		sts 204+1,r25
+ 131 0042 8093 CC00 		sts 204,r24
+ 132               	.LBE42:
+ 133               	.LBE41:
+ 134               	.LSM18:
+ 135 0046 80E0      		ldi r24,lo8(USARTStream)
+ 136 0048 90E0      		ldi r25,hi8(USARTStream)
+ 137 004a 9093 0000 		sts __iob+2+1,r25
+ 138 004e 8093 0000 		sts __iob+2,r24
+ 139               	.LBE40:
+ 140               	.LBE39:
+ 141               	.LSM19:
+ 142 0052 0E94 0000 		call SDCardManager_Init
+ 143               	.LSM20:
+ 144 0056 0E94 0000 		call USB_Init
+ 145               	/* epilogue start */
+ 146               	.LSM21:
+ 147 005a 0895      		ret
+ 148               	.LFE42:
+ 150               		.section	.text.EVENT_USB_Device_Connect,"ax",@progbits
+ 151               	.global	EVENT_USB_Device_Connect
+ 153               	EVENT_USB_Device_Connect:
+ 154               	.LFB43:
+ 155               	.LSM22:
+ 156               	/* prologue: function */
+ 157               	/* frame size = 0 */
+ 158               	/* stack size = 0 */
+ 159               	.L__stack_usage = 0
+ 160               	.LSM23:
+ 161 0000 1092 0000 		sts IsMassStoreReset,__zero_reg__
+ 162               	/* epilogue start */
+ 163               	.LSM24:
+ 164 0004 0895      		ret
+ 165               	.LFE43:
+ 167               		.section	.text.EVENT_USB_Device_Disconnect,"ax",@progbits
+ 168               	.global	EVENT_USB_Device_Disconnect
+ 170               	EVENT_USB_Device_Disconnect:
+ 171               	.LFB44:
+ 172               	.LSM25:
+ 173               	/* prologue: function */
+ 174               	/* frame size = 0 */
+ 175               	/* stack size = 0 */
+ 176               	.L__stack_usage = 0
+ 177               	/* epilogue start */
+ 178               	.LSM26:
+ 179 0000 0895      		ret
+ 180               	.LFE44:
+ 182               		.section	.text.EVENT_USB_Device_ConfigurationChanged,"ax",@progbits
+ 183               	.global	EVENT_USB_Device_ConfigurationChanged
+ 185               	EVENT_USB_Device_ConfigurationChanged:
+ 186               	.LFB45:
+ 187               	.LSM27:
+ 188               	/* prologue: function */
+ 189               	/* frame size = 0 */
+ 190               	/* stack size = 0 */
+ 191               	.L__stack_usage = 0
+ 192               	.LVL3:
+ 193               	.LSM28:
+ 194 0000 83E0      		ldi r24,lo8(3)
+ 195 0002 61E8      		ldi r22,lo8(-127)
+ 196 0004 46E3      		ldi r20,lo8(54)
+ 197 0006 0E94 0000 		call Endpoint_ConfigureEndpoint_Prv
+ 198               	.LVL4:
+ 199               	.LSM29:
+ 200 000a 84E0      		ldi r24,lo8(4)
+ 201 000c 60E8      		ldi r22,lo8(-128)
+ 202 000e 46E3      		ldi r20,lo8(54)
+ 203 0010 0E94 0000 		call Endpoint_ConfigureEndpoint_Prv
+ 204               	/* epilogue start */
+ 205               	.LSM30:
+ 206 0014 0895      		ret
+ 207               	.LFE45:
+ 209               		.section	.text.EVENT_USB_Device_UnhandledControlRequest,"ax",@progbits
+ 210               	.global	EVENT_USB_Device_UnhandledControlRequest
+ 212               	EVENT_USB_Device_UnhandledControlRequest:
+ 213               	.LFB46:
+ 214               	.LSM31:
+ 215               	/* prologue: function */
+ 216               	/* frame size = 0 */
+ 217               	/* stack size = 0 */
+ 218               	.L__stack_usage = 0
+ 219               	.LSM32:
+ 220 0000 8091 0000 		lds r24,USB_ControlRequest+1
+ 221 0004 8E3F      		cpi r24,lo8(-2)
+ 222 0006 01F0      		breq .L10
+ 223 0008 8F3F      		cpi r24,lo8(-1)
+ 224 000a 01F4      		brne .L8
+ 225               	.LSM33:
+ 226 000c 8091 0000 		lds r24,USB_ControlRequest
+ 227 0010 8132      		cpi r24,lo8(33)
+ 228 0012 01F4      		brne .L8
+ 229               	.LSM34:
+ 230 0014 8091 E800 		lds r24,232
+ 231 0018 877F      		andi r24,lo8(-9)
+ 232 001a 8093 E800 		sts 232,r24
+ 233               	.LSM35:
+ 234 001e 81E0      		ldi r24,lo8(1)
+ 235 0020 8093 0000 		sts IsMassStoreReset,r24
+ 236               	.LSM36:
+ 237 0024 0E94 0000 		call Endpoint_ClearStatusStage
+ 238 0028 0895      		ret
+ 239               	.L10:
+ 240               	.LSM37:
+ 241 002a 8091 0000 		lds r24,USB_ControlRequest
+ 242 002e 813A      		cpi r24,lo8(-95)
+ 243 0030 01F4      		brne .L8
+ 244               	.LSM38:
+ 245 0032 8091 E800 		lds r24,232
+ 246 0036 877F      		andi r24,lo8(-9)
+ 247 0038 8093 E800 		sts 232,r24
+ 248               	.LVL5:
+ 249               	.LBB43:
+ 250               	.LBB44:
+ 251               	.LSM39:
+ 252 003c 1092 F100 		sts 241,__zero_reg__
+ 253               	.LBE44:
+ 254               	.LBE43:
+ 255               	.LBB45:
+ 256               	.LSM40:
+ 257 0040 8091 E800 		lds r24,232
+ 258               	.LVL6:
+ 259 0044 982F      		mov r25,r24
+ 260 0046 9E7F      		andi r25,lo8(-2)
+ 261 0048 9093 E800 		sts 232,r25
+ 262 004c 8F77      		andi r24,lo8(127)
+ 263               	.LVL7:
+ 264 004e 8093 E800 		sts 232,r24
+ 265               	.LBE45:
+ 266               	.LSM41:
+ 267 0052 0E94 0000 		call Endpoint_ClearStatusStage
+ 268               	.LVL8:
+ 269               	.L8:
+ 270 0056 0895      		ret
+ 271               	.LFE46:
+ 273               		.section	.text.MassStorage_Task,"ax",@progbits
+ 274               	.global	MassStorage_Task
+ 276               	MassStorage_Task:
+ 277               	.LFB47:
+ 278               	.LSM42:
+ 279               	/* prologue: function */
+ 280               	/* frame size = 0 */
+ 281               	/* stack size = 0 */
+ 282               	.L__stack_usage = 0
+ 283               	.LSM43:
+ 284 0000 8091 0000 		lds r24,USB_DeviceState
+ 285 0004 8430      		cpi r24,lo8(4)
+ 286 0006 01F0      		breq .+2
+ 287 0008 00C0      		rjmp .L12
+ 288               	.LSM44:
+ 289 000a 8093 E900 		sts 233,r24
+ 290               	.LSM45:
+ 291 000e 9091 E800 		lds r25,232
+ 292 0012 95FF      		sbrs r25,5
+ 293 0014 00C0      		rjmp .L14
+ 294               	.LBB52:
+ 295               	.LBB53:
+ 296               	.LSM46:
+ 297 0016 8093 E900 		sts 233,r24
+ 298               	.LSM47:
+ 299 001a 80E0      		ldi r24,lo8(CommandBlock)
+ 300 001c 90E0      		ldi r25,hi8(CommandBlock)
+ 301 001e 6FE0      		ldi r22,lo8(15)
+ 302 0020 70E0      		ldi r23,hi8(15)
+ 303 0022 40E0      		ldi r20,lo8(gs(StreamCallback_AbortOnMassStoreReset))
+ 304 0024 50E0      		ldi r21,hi8(gs(StreamCallback_AbortOnMassStoreReset))
+ 305 0026 0E94 0000 		call Endpoint_Read_Stream_LE
+ 306               	.LSM48:
+ 307 002a 8091 0000 		lds r24,IsMassStoreReset
+ 308 002e 8823      		tst r24
+ 309 0030 01F0      		breq .+2
+ 310 0032 00C0      		rjmp .L14
+ 311               	.LSM49:
+ 312 0034 8091 0000 		lds r24,CommandBlock
+ 313 0038 9091 0000 		lds r25,CommandBlock+1
+ 314 003c A091 0000 		lds r26,CommandBlock+2
+ 315 0040 B091 0000 		lds r27,CommandBlock+3
+ 316 0044 8535      		cpi r24,lo8(1128420181)
+ 317 0046 23E5      		ldi r18,hi8(1128420181)
+ 318 0048 9207      		cpc r25,r18
+ 319 004a 22E4      		ldi r18,hlo8(1128420181)
+ 320 004c A207      		cpc r26,r18
+ 321 004e 23E4      		ldi r18,hhi8(1128420181)
+ 322 0050 B207      		cpc r27,r18
+ 323 0052 01F4      		brne .L16
+ 324 0054 8091 0000 		lds r24,CommandBlock+13
+ 325 0058 8823      		tst r24
+ 326 005a 01F4      		brne .L16
+ 327               	.LSM50:
+ 328 005c 8091 0000 		lds r24,CommandBlock+12
+ 329 0060 90E0      		ldi r25,lo8(0)
+ 330 0062 8F71      		andi r24,lo8(31)
+ 331 0064 9070      		andi r25,hi8(31)
+ 332               	.LSM51:
+ 333 0066 0097      		sbiw r24,0
+ 334 0068 01F4      		brne .L16
+ 335               	.LSM52:
+ 336 006a 6091 0000 		lds r22,CommandBlock+14
+ 337               	.LSM53:
+ 338 006e 6623      		tst r22
+ 339 0070 01F0      		breq .L16
+ 340               	.LSM54:
+ 341 0072 6131      		cpi r22,lo8(17)
+ 342 0074 00F0      		brlo .L17
+ 343               	.L16:
+ 344               	.LSM55:
+ 345 0076 8091 EB00 		lds r24,235
+ 346 007a 8062      		ori r24,lo8(32)
+ 347 007c 8093 EB00 		sts 235,r24
+ 348               	.LSM56:
+ 349 0080 83E0      		ldi r24,lo8(3)
+ 350 0082 8093 E900 		sts 233,r24
+ 351               	.LSM57:
+ 352 0086 8091 EB00 		lds r24,235
+ 353 008a 8062      		ori r24,lo8(32)
+ 354 008c 8093 EB00 		sts 235,r24
+ 355 0090 00C0      		rjmp .L14
+ 356               	.L17:
+ 357               	.LSM58:
+ 358 0092 80E0      		ldi r24,lo8(CommandBlock+15)
+ 359 0094 90E0      		ldi r25,hi8(CommandBlock+15)
+ 360 0096 70E0      		ldi r23,lo8(0)
+ 361 0098 40E0      		ldi r20,lo8(gs(StreamCallback_AbortOnMassStoreReset))
+ 362 009a 50E0      		ldi r21,hi8(gs(StreamCallback_AbortOnMassStoreReset))
+ 363 009c 0E94 0000 		call Endpoint_Read_Stream_LE
+ 364               	.LSM59:
+ 365 00a0 8091 0000 		lds r24,IsMassStoreReset
+ 366 00a4 8823      		tst r24
+ 367 00a6 01F0      		breq .+2
+ 368 00a8 00C0      		rjmp .L14
+ 369               	.LBB54:
+ 370               	.LSM60:
+ 371 00aa 8091 E800 		lds r24,232
+ 372               	.LVL9:
+ 373 00ae 982F      		mov r25,r24
+ 374 00b0 9B7F      		andi r25,lo8(-5)
+ 375 00b2 9093 E800 		sts 232,r25
+ 376 00b6 8F77      		andi r24,lo8(127)
+ 377               	.LVL10:
+ 378 00b8 8093 E800 		sts 232,r24
+ 379               	.LBE54:
+ 380               	.LBE53:
+ 381               	.LBE52:
+ 382               	.LSM61:
+ 383 00bc 8091 0000 		lds r24,CommandBlock+12
+ 384 00c0 87FF      		sbrs r24,7
+ 385 00c2 00C0      		rjmp .L19
+ 386               	.LSM62:
+ 387 00c4 83E0      		ldi r24,lo8(3)
+ 388 00c6 8093 E900 		sts 233,r24
+ 389               	.L19:
+ 390               	.LSM63:
+ 391 00ca 0E94 0000 		call SCSI_DecodeSCSICommand
+ 392               	.LSM64:
+ 393 00ce 91E0      		ldi r25,lo8(1)
+ 394 00d0 9827      		eor r25,r24
+ 395               	.LSM65:
+ 396 00d2 9093 0000 		sts CommandStatus+12,r25
+ 397               	.LSM66:
+ 398 00d6 2091 0000 		lds r18,CommandBlock+4
+ 399 00da 3091 0000 		lds r19,CommandBlock+4+1
+ 400 00de 4091 0000 		lds r20,CommandBlock+4+2
+ 401 00e2 5091 0000 		lds r21,CommandBlock+4+3
+ 402 00e6 2093 0000 		sts CommandStatus+4,r18
+ 403 00ea 3093 0000 		sts CommandStatus+4+1,r19
+ 404 00ee 4093 0000 		sts CommandStatus+4+2,r20
+ 405 00f2 5093 0000 		sts CommandStatus+4+3,r21
+ 406               	.LSM67:
+ 407 00f6 2091 0000 		lds r18,CommandBlock+8
+ 408 00fa 3091 0000 		lds r19,CommandBlock+8+1
+ 409 00fe 4091 0000 		lds r20,CommandBlock+8+2
+ 410 0102 5091 0000 		lds r21,CommandBlock+8+3
+ 411 0106 2093 0000 		sts CommandStatus+8,r18
+ 412 010a 3093 0000 		sts CommandStatus+8+1,r19
+ 413 010e 4093 0000 		sts CommandStatus+8+2,r20
+ 414 0112 5093 0000 		sts CommandStatus+8+3,r21
+ 415               	.LSM68:
+ 416 0116 9130      		cpi r25,lo8(1)
+ 417 0118 01F4      		brne .L20
+ 418               	.LSM69:
+ 419 011a 2115      		cp r18,__zero_reg__
+ 420 011c 3105      		cpc r19,__zero_reg__
+ 421 011e 4105      		cpc r20,__zero_reg__
+ 422 0120 5105      		cpc r21,__zero_reg__
+ 423 0122 01F0      		breq .L20
+ 424               	.LSM70:
+ 425 0124 8091 EB00 		lds r24,235
+ 426 0128 8062      		ori r24,lo8(32)
+ 427 012a 8093 EB00 		sts 235,r24
+ 428               	.L20:
+ 429               	.LBB55:
+ 430               	.LBB56:
+ 431               	.LSM71:
+ 432 012e 84E0      		ldi r24,lo8(4)
+ 433 0130 8093 E900 		sts 233,r24
+ 434 0134 00C0      		rjmp .L21
+ 435               	.L22:
+ 436               	.LSM72:
+ 437 0136 8091 0000 		lds r24,IsMassStoreReset
+ 438 013a 8823      		tst r24
+ 439 013c 01F4      		brne .L14
+ 440               	.L21:
+ 441               	.LSM73:
+ 442 013e 8091 EB00 		lds r24,235
+ 443 0142 85FD      		sbrc r24,5
+ 444 0144 00C0      		rjmp .L22
+ 445               	.LSM74:
+ 446 0146 83E0      		ldi r24,lo8(3)
+ 447 0148 8093 E900 		sts 233,r24
+ 448 014c 00C0      		rjmp .L23
+ 449               	.L24:
+ 450               	.LSM75:
+ 451 014e 8091 0000 		lds r24,IsMassStoreReset
+ 452 0152 8823      		tst r24
+ 453 0154 01F4      		brne .L14
+ 454               	.L23:
+ 455               	.LSM76:
+ 456 0156 8091 EB00 		lds r24,235
+ 457 015a 85FD      		sbrc r24,5
+ 458 015c 00C0      		rjmp .L24
+ 459               	.LSM77:
+ 460 015e 80E0      		ldi r24,lo8(CommandStatus)
+ 461 0160 90E0      		ldi r25,hi8(CommandStatus)
+ 462 0162 6DE0      		ldi r22,lo8(13)
+ 463 0164 70E0      		ldi r23,hi8(13)
+ 464 0166 40E0      		ldi r20,lo8(gs(StreamCallback_AbortOnMassStoreReset))
+ 465 0168 50E0      		ldi r21,hi8(gs(StreamCallback_AbortOnMassStoreReset))
+ 466 016a 0E94 0000 		call Endpoint_Write_Stream_LE
+ 467               	.LSM78:
+ 468 016e 8091 0000 		lds r24,IsMassStoreReset
+ 469 0172 8823      		tst r24
+ 470 0174 01F4      		brne .L14
+ 471               	.LBB57:
+ 472               	.LSM79:
+ 473 0176 8091 E800 		lds r24,232
+ 474               	.LVL11:
+ 475 017a 982F      		mov r25,r24
+ 476 017c 9E7F      		andi r25,lo8(-2)
+ 477 017e 9093 E800 		sts 232,r25
+ 478 0182 8F77      		andi r24,lo8(127)
+ 479               	.LVL12:
+ 480 0184 8093 E800 		sts 232,r24
+ 481               	.L14:
+ 482               	.LBE57:
+ 483               	.LBE56:
+ 484               	.LBE55:
+ 485               	.LSM80:
+ 486 0188 8091 0000 		lds r24,IsMassStoreReset
+ 487 018c 8823      		tst r24
+ 488 018e 01F0      		breq .L12
+ 489               	.LSM81:
+ 490 0190 80E1      		ldi r24,lo8(16)
+ 491 0192 8093 EA00 		sts 234,r24
+ 492 0196 1092 EA00 		sts 234,__zero_reg__
+ 493               	.LSM82:
+ 494 019a 88E0      		ldi r24,lo8(8)
+ 495 019c 8093 EA00 		sts 234,r24
+ 496 01a0 1092 EA00 		sts 234,__zero_reg__
+ 497               	.LSM83:
+ 498 01a4 84E0      		ldi r24,lo8(4)
+ 499 01a6 8093 E900 		sts 233,r24
+ 500               	.LSM84:
+ 501 01aa 8091 EB00 		lds r24,235
+ 502 01ae 8061      		ori r24,lo8(16)
+ 503 01b0 8093 EB00 		sts 235,r24
+ 504               	.LSM85:
+ 505 01b4 8091 EB00 		lds r24,235
+ 506 01b8 8860      		ori r24,lo8(8)
+ 507 01ba 8093 EB00 		sts 235,r24
+ 508               	.LSM86:
+ 509 01be 83E0      		ldi r24,lo8(3)
+ 510 01c0 8093 E900 		sts 233,r24
+ 511               	.LSM87:
+ 512 01c4 8091 EB00 		lds r24,235
+ 513 01c8 8061      		ori r24,lo8(16)
+ 514 01ca 8093 EB00 		sts 235,r24
+ 515               	.LSM88:
+ 516 01ce 8091 EB00 		lds r24,235
+ 517 01d2 8860      		ori r24,lo8(8)
+ 518 01d4 8093 EB00 		sts 235,r24
+ 519               	.LSM89:
+ 520 01d8 1092 0000 		sts IsMassStoreReset,__zero_reg__
+ 521               	.L12:
+ 522 01dc 0895      		ret
+ 523               	.LFE47:
+ 525               		.section	.text.mass_storage_main,"ax",@progbits
+ 526               	.global	mass_storage_main
+ 528               	mass_storage_main:
+ 529               	.LFB40:
+ 530               	.LSM90:
+ 531               	/* prologue: function */
+ 532               	/* frame size = 0 */
+ 533               	/* stack size = 0 */
+ 534               	.L__stack_usage = 0
+ 535               	.L26:
+ 536               	.LSM91:
+ 537 0000 0E94 0000 		call MassStorage_Task
+ 538               	.LSM92:
+ 539 0004 0E94 0000 		call USB_USBTask
+ 540 0008 00C0      		rjmp .L26
+ 541               	.LFE40:
+ 543               		.section	.text.main,"ax",@progbits
+ 544               	.global	main
+ 546               	main:
+ 547               	.LFB39:
+ 548               	.LSM93:
+ 549               	/* prologue: function */
+ 550               	/* frame size = 0 */
+ 551               	/* stack size = 0 */
+ 552               	.L__stack_usage = 0
+ 553               	.LSM94:
+ 554 0000 0E94 0000 		call SetupHardware
+ 555               	.LSM95:
+ 556 0004 3E98      		cbi 39-32,6
+ 557               	.LSM96:
+ 558 0006 469A      		sbi 40-32,6
+ 559               	.LSM97:
+ 560               	/* #APP */
+ 561               	 ;  63 "MassStorage.c" 1
+ 562 0008 0000      		nop
+ 563               	 ;  0 "" 2
+ 564               	.LSM98:
+ 565               	 ;  64 "MassStorage.c" 1
+ 566 000a 0000      		nop
+ 567               	 ;  0 "" 2
+ 568               	.LSM99:
+ 569               	 ;  65 "MassStorage.c" 1
+ 570 000c 0000      		nop
+ 571               	 ;  0 "" 2
+ 572               	.LSM100:
+ 573               	/* #NOAPP */
+ 574 000e 369B      		sbis 38-32,6
+ 575 0010 00C0      		rjmp .L28
+ 576               	.LSM101:
+ 577 0012 00D0      		rcall .
+ 578 0014 80E0      		ldi r24,lo8(__c.2450)
+ 579 0016 90E0      		ldi r25,hi8(__c.2450)
+ 580 0018 EDB7      		in r30,__SP_L__
+ 581 001a FEB7      		in r31,__SP_H__
+ 582 001c 9283      		std Z+2,r25
+ 583 001e 8183      		std Z+1,r24
+ 584 0020 0E94 0000 		call printf_P
+ 585               	.LSM102:
+ 586 0024 0F90      		pop __tmp_reg__
+ 587 0026 0F90      		pop __tmp_reg__
+ 588 0028 0E94 0000 		call mass_storage_main
+ 589 002c 00C0      		rjmp .L29
+ 590               	.L28:
+ 591               	.LSM103:
+ 592 002e 00D0      		rcall .
+ 593 0030 80E0      		ldi r24,lo8(__c.2452)
+ 594 0032 90E0      		ldi r25,hi8(__c.2452)
+ 595 0034 EDB7      		in r30,__SP_L__
+ 596 0036 FEB7      		in r31,__SP_H__
+ 597 0038 9283      		std Z+2,r25
+ 598 003a 8183      		std Z+1,r24
+ 599 003c 0E94 0000 		call printf_P
+ 600               	.LSM104:
+ 601 0040 0F90      		pop __tmp_reg__
+ 602 0042 0F90      		pop __tmp_reg__
+ 603 0044 0E94 0000 		call data_logger_main
+ 604               	.L29:
+ 605               	.LSM105:
+ 606 0048 80E0      		ldi r24,lo8(0)
+ 607 004a 90E0      		ldi r25,hi8(0)
+ 608               	/* epilogue start */
+ 609 004c 0895      		ret
+ 610               	.LFE39:
+ 612               	.global	CommandStatus
+ 613               		.data
+ 616               	CommandStatus:
+ 617 0000 55        		.byte	85
+ 618 0001 53        		.byte	83
+ 619 0002 42        		.byte	66
+ 620 0003 53        		.byte	83
+ 621 0004 0000 0000 		.skip 9,0
+ 621      0000 0000 
+ 621      00
+ 622               	.global	IsMassStoreReset
+ 623               	.global	IsMassStoreReset
+ 624               		.section .bss
+ 627               	IsMassStoreReset:
+ 628 0000 00        		.skip 1,0
+ 629               		.comm CommandBlock,31,1
+ 630               		.section	.progmem.data,"a",@progbits
+ 633               	__c.2452:
+ 634 0000 456E 7465 		.string	"Entering Data Logger Mode\r\n"
+ 634      7269 6E67 
+ 634      2044 6174 
+ 634      6120 4C6F 
+ 634      6767 6572 
+ 637               	__c.2450:
+ 638 001c 456E 7465 		.string	"Entering Mass Storage Mode\r\n"
+ 638      7269 6E67 
+ 638      204D 6173 
+ 638      7320 5374 
+ 638      6F72 6167 
+ 735               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 MassStorage.c
+     /tmp/ccqBpPNU.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccqBpPNU.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccqBpPNU.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccqBpPNU.s:5      *ABS*:0000000000000034 __CCP__
+     /tmp/ccqBpPNU.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccqBpPNU.s:7      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccqBpPNU.s:19     .text.StreamCallback_AbortOnMassStoreReset:0000000000000000 StreamCallback_AbortOnMassStoreReset
+     /tmp/ccqBpPNU.s:627    .bss:0000000000000000 IsMassStoreReset
+     /tmp/ccqBpPNU.s:36     .text.data_logger_main:0000000000000000 data_logger_main
+     /tmp/ccqBpPNU.s:71     .text.SetupHardware:0000000000000000 SetupHardware
+     /tmp/ccqBpPNU.s:153    .text.EVENT_USB_Device_Connect:0000000000000000 EVENT_USB_Device_Connect
+     /tmp/ccqBpPNU.s:170    .text.EVENT_USB_Device_Disconnect:0000000000000000 EVENT_USB_Device_Disconnect
+     /tmp/ccqBpPNU.s:185    .text.EVENT_USB_Device_ConfigurationChanged:0000000000000000 EVENT_USB_Device_ConfigurationChanged
+     /tmp/ccqBpPNU.s:212    .text.EVENT_USB_Device_UnhandledControlRequest:0000000000000000 EVENT_USB_Device_UnhandledControlRequest
+     /tmp/ccqBpPNU.s:276    .text.MassStorage_Task:0000000000000000 MassStorage_Task
+                            *COM*:000000000000001f CommandBlock
+     /tmp/ccqBpPNU.s:616    .data:0000000000000000 CommandStatus
+     /tmp/ccqBpPNU.s:528    .text.mass_storage_main:0000000000000000 mass_storage_main
+     /tmp/ccqBpPNU.s:546    .text.main:0000000000000000 main
+     /tmp/ccqBpPNU.s:637    .progmem.data:000000000000001c __c.2450
+     /tmp/ccqBpPNU.s:633    .progmem.data:0000000000000000 __c.2452
+
+UNDEFINED SYMBOLS
+UMeter_Init
+adc_init
+UMeter_Task
+USARTStream
+__iob
+SDCardManager_Init
+USB_Init
+Endpoint_ConfigureEndpoint_Prv
+USB_ControlRequest
+Endpoint_ClearStatusStage
+USB_DeviceState
+Endpoint_Read_Stream_LE
+SCSI_DecodeSCSICommand
+Endpoint_Write_Stream_LE
+USB_USBTask
+printf_P
+__do_copy_data
+__do_clear_bss

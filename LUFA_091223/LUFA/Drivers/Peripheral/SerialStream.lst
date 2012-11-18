@@ -1,0 +1,83 @@
+   1               		.file	"SerialStream.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__ = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.section	.text.SerialStream_TxByte,"ax",@progbits
+  18               	SerialStream_TxByte:
+  19               	.LFB11:
+  20               	.LSM0:
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	/* stack size = 0 */
+  24               	.L__stack_usage = 0
+  25               	.LVL0:
+  26               	.L2:
+  27               	.LBB6:
+  28               	.LBB7:
+  29               	.LSM1:
+  30 0000 9091 C800 		lds r25,200
+  31 0004 95FF      		sbrs r25,5
+  32 0006 00C0      		rjmp .L2
+  33               	.LSM2:
+  34 0008 8093 CE00 		sts 206,r24
+  35               	.LBE7:
+  36               	.LBE6:
+  37               	.LSM3:
+  38 000c 80E0      		ldi r24,lo8(0)
+  39 000e 90E0      		ldi r25,hi8(0)
+  40               	.LVL1:
+  41               	/* epilogue start */
+  42 0010 0895      		ret
+  43               	.LFE11:
+  45               		.section	.text.SerialStream_RxByte,"ax",@progbits
+  47               	SerialStream_RxByte:
+  48               	.LFB12:
+  49               	.LSM4:
+  50               	/* prologue: function */
+  51               	/* frame size = 0 */
+  52               	/* stack size = 0 */
+  53               	.L__stack_usage = 0
+  54               	.L5:
+  55               	.LBB8:
+  56               	.LBB9:
+  57               	.LSM5:
+  58 0000 8091 C800 		lds r24,200
+  59 0004 87FF      		sbrs r24,7
+  60 0006 00C0      		rjmp .L5
+  61               	.LSM6:
+  62 0008 8091 CE00 		lds r24,206
+  63               	.LBE9:
+  64               	.LBE8:
+  65               	.LSM7:
+  66 000c 90E0      		ldi r25,lo8(0)
+  67               	/* epilogue start */
+  68 000e 0895      		ret
+  69               	.LFE12:
+  71               	.global	USARTStream
+  72               		.data
+  75               	USARTStream:
+  76 0000 0000 00   		.skip 3,0
+  77 0003 03        		.byte	3
+  78 0004 0000 0000 		.skip 4,0
+  79 0008 0000      		.word	gs(SerialStream_TxByte)
+  80 000a 0000      		.word	gs(SerialStream_RxByte)
+  81 000c 0000      		.word	0
+ 114               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 SerialStream.c
+     /tmp/cchnG0Sk.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/cchnG0Sk.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/cchnG0Sk.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/cchnG0Sk.s:5      *ABS*:0000000000000034 __CCP__
+     /tmp/cchnG0Sk.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cchnG0Sk.s:7      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cchnG0Sk.s:18     .text.SerialStream_TxByte:0000000000000000 SerialStream_TxByte
+     /tmp/cchnG0Sk.s:47     .text.SerialStream_RxByte:0000000000000000 SerialStream_RxByte
+     /tmp/cchnG0Sk.s:75     .data:0000000000000000 USARTStream
+
+UNDEFINED SYMBOLS
+__do_copy_data
