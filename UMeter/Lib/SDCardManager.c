@@ -137,7 +137,9 @@ void UMeter_Init(void)
   struct fat_dir_entry_struct file_entry;
   if(!fat_create_file(dd, "umeter.txt", &file_entry))
   {
+#if DEBUG
       printf_P(PSTR("error creating file\r\n"));
+#endif
   }
 
 }
@@ -145,49 +147,56 @@ void UMeter_Init(void)
 
 void UMeter_Task(void)
 {
-  //static int x=1;
   unsigned int n, j, adc;
   float volts;
   unsigned char buff[8];
-
+#if DEBUG
   printf_P(PSTR("writing...\r\n"));
-  
+#endif
   // search file in current directory and open it
   struct fat_file_struct* fd = open_file_in_dir(fs, dd, "umeter.txt");
   if(!fd)
   {
+#if DEBUG
       printf_P(PSTR("error opening file\r\n"));
+#endif
       return;
   }
 
   // seek to EOF to append
   while(fat_read_file(fd, buff, sizeof(buff)) == sizeof(buff));
 
-  //int n = sprintf(buff, "line %d\n", x++);
-
   // read sensor values
+#if DEBUG
   printf("sensors = ");
+#endif
   for(j=1; j < 5; j++)
   {
     select_sensor(j);
     adc = adc_conversion();
     volts = adc*2.56/1023*2; // v_in = ADC_value * Vref / 2^10-1 * volt div. scaler
     n = float2str(volts, buff);
+#if DEBUG
     printf("%sV  ", buff);
-
+#endif
     // write buff to file
     if(fat_write_file(fd, buff, n) != n)
     {
+#if DEBUG
 	printf_P(PSTR("error writing to file\r\n"));
+#endif
 	break;
     }
   }
+#if DEBUG
   printf("\r\n");
-  
+#endif
   // write newline
   if(fat_write_file(fd, "\n", 1) != 1)
   {
+#if DEBUG
       printf_P(PSTR("error writing to file\r\n"));
+#endif
   }
 
   fat_close_file(fd);
@@ -225,7 +234,9 @@ uint32_t SDCardManager_GetNbBlocks(void)
 		
 	if(!sd_raw_get_info(&disk_info))
 	{
+#if DEBUG
 		printf_P(PSTR("Error reading SD card info\r\n"));
+#endif
 		return 0;
 	}
 
@@ -279,8 +290,9 @@ uintptr_t SDCardManager_WriteBlockHandler(uint8_t* buffer, offset_t offset, void
 void SDCardManager_WriteBlocks(uint32_t BlockAddress, uint16_t TotalBlocks)
 {
 	bool     UsingSecondBuffer   = false;
-
+#if DEBUG
 	printf_P(PSTR("W %li %i\r\n"), BlockAddress, TotalBlocks);
+#endif
 	//printf("\r"); // blink FTDI LED
 	
 	/* Wait until endpoint is ready before continuing */
@@ -356,8 +368,9 @@ void SDCardManager_ReadBlocks(uint32_t BlockAddress, uint16_t TotalBlocks)
 {
 	uint16_t CurrPage          = BlockAddress;
 	uint16_t CurrPageByte      = 0;
-
+#if DEBUG
 	printf_P(PSTR("R %li %i\r\n"), BlockAddress, TotalBlocks);
+#endif
 	//printf("\r"); // blink FTDI LED
 	
 	/* Wait until endpoint is ready before continuing */

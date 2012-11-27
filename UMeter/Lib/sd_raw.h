@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2006-2009 by Roland Riegel <feedback@roland-riegel.de>
+ * Copyright (c) 2006-2012 by Roland Riegel <feedback@roland-riegel.de>
  *
  * This file is free software; you can redistribute it and/or modify
  * it under the terms of either the GNU General Public License version 2
@@ -124,15 +124,15 @@ struct sd_raw_info
 typedef uint8_t (*sd_raw_read_interval_handler_t)(uint8_t* buffer, offset_t offset, void* p);
 typedef uintptr_t (*sd_raw_write_interval_handler_t)(uint8_t* buffer, offset_t offset, void* p);
 
-uint8_t sd_raw_init(void);
-uint8_t sd_raw_available(void);
-uint8_t sd_raw_locked(void);
+uint8_t sd_raw_init();
+uint8_t sd_raw_available();
+uint8_t sd_raw_locked();
 
 uint8_t sd_raw_read(offset_t offset, uint8_t* buffer, uintptr_t length);
 uint8_t sd_raw_read_interval(offset_t offset, uint8_t* buffer, uintptr_t interval, uintptr_t length, sd_raw_read_interval_handler_t callback, void* p);
 uint8_t sd_raw_write(offset_t offset, const uint8_t* buffer, uintptr_t length);
 uint8_t sd_raw_write_interval(offset_t offset, uint8_t* buffer, uintptr_t length, sd_raw_write_interval_handler_t callback, void* p);
-uint8_t sd_raw_sync(void);
+uint8_t sd_raw_sync();
 
 uint8_t sd_raw_get_info(struct sd_raw_info* info);
 

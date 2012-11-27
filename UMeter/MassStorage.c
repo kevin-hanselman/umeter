@@ -38,6 +38,8 @@
 #include "MassStorage.h"
 #include <util/delay.h>
 
+#define DEBUG 1
+
 /** Structure to hold the latest Command Block Wrapper issued by the host, containing a SCSI command to execute. */
 CommandBlockWrapper_t  CommandBlock;
 
@@ -65,12 +67,15 @@ int main(void)
   asm("nop");
   
   if (PINC & (1 << PC6)) {
-  //if(bit_is_clear(PINC, PC6)) {
+#if DEBUG
     printf_P(PSTR("Entering Mass Storage Mode\r\n"));
+#endif
     mass_storage_main();
   }
   else {
+#if DEBUG
     printf_P(PSTR("Entering Data Logger Mode\r\n"));
+#endif
     data_logger_main();
   }
 }
