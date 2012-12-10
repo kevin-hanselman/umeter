@@ -44,7 +44,7 @@
 		#include <LUFA/Drivers/USB/USB.h>
 		#include <LUFA/Drivers/Board/LEDs.h>
 
-		#include "MassStorage.h"
+		#include "UMeter.h"
 		#include "Descriptors.h"
 		#include "SDCardManager.h"
 		#include "SCSI_Codes.h"

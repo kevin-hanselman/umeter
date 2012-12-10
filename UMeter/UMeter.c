@@ -1,7 +1,7 @@
 /*
              LUFA Library
      Copyright (C) Dean Camera, 2009.
-              
+
   dean [at] fourwalledcubicle [dot] com
       www.fourwalledcubicle.com
 */
@@ -34,8 +34,8 @@
  *  is responsible for the initial application hardware configuration.
  */
 
-#define  INCLUDE_FROM_MASSSTORAGE_C
-#include "MassStorage.h"
+#define  INCLUDE_FROM_UMETER_C
+#include "UMeter.h"
 #include <util/delay.h>
 
 #define DEBUG 1
@@ -58,46 +58,44 @@ void data_logger_main(void);
 
 int main(void)
 {
-  SetupHardware();
-  DDRC &= ~(1 << PC6);		// PD6 is input
-  PORTC |= (1 << PC6);		// PD6 pull up resistor enabled
+	SetupHardware();
+	DDRC &= ~(1 << PC6);		// PD6 is input
+	PORTC |= (1 << PC6);		// PD6 pull up resistor enabled
 
-  asm("nop");
-  asm("nop");
-  asm("nop");
-  
-  if (PINC & (1 << PC6)) {
+	asm("nop");
+	asm("nop");
+	asm("nop");
+
+	if(PINC & (1 << PC6)) {
 #if DEBUG
-    printf_P(PSTR("Entering Mass Storage Mode\r\n"));
+		printf_P(PSTR("Entering Mass Storage Mode\r\n"));
 #endif
-    mass_storage_main();
-  }
-  else {
+		mass_storage_main();
+	} else {
 #if DEBUG
-    printf_P(PSTR("Entering Data Logger Mode\r\n"));
+		printf_P(PSTR("Entering Data Logger Mode\r\n"));
 #endif
-    data_logger_main();
-  }
+		data_logger_main();
+	}
 }
 
-void mass_storage_main(void) {
-  for (;;)
-  {
-    MassStorage_Task();
-    USB_USBTask();
-  }
+void mass_storage_main(void)
+{
+	for(;;) {
+		MassStorage_Task();
+		USB_USBTask();
+	}
 }
 
-void data_logger_main(void) {
-  
-  UMeter_Init();
-  adc_init();
+void data_logger_main(void)
+{
+	UMeter_Init();
+	adc_init();
 
-  for (;;)
-  {
-    _delay_ms(1000);
-    UMeter_Task();
-  }
+	for(;;) {
+		_delay_ms(1000);
+		UMeter_Task();
+	}
 }
 
 /** Configures the board hardware and chip peripherals for the demo's functionality. */
@@ -121,10 +119,10 @@ void SetupHardware(void)
 void EVENT_USB_Device_Connect(void)
 {
 	//printf("Connect\r\n");
-	
+
 	/* Indicate USB enumerating */
 	LEDs_SetAllLEDs(LEDMASK_USB_ENUMERATING);
-	
+
 	/* Reset the MSReset flag upon connection */
 	IsMassStoreReset = false;
 }
@@ -144,24 +142,22 @@ void EVENT_USB_Device_Disconnect(void)
 void EVENT_USB_Device_ConfigurationChanged(void)
 {
 	//printf("Ready\r\n");
-	
+
 	/* Indicate USB connected and ready */
 	LEDs_SetAllLEDs(LEDMASK_USB_READY);
 
 	/* Setup Mass Storage In and Out Endpoints */
-	if (!(Endpoint_ConfigureEndpoint(MASS_STORAGE_IN_EPNUM, EP_TYPE_BULK,
-		                             ENDPOINT_DIR_IN, MASS_STORAGE_IO_EPSIZE,
-	                                 ENDPOINT_BANK_DOUBLE)))
-	{
+	if(!(Endpoint_ConfigureEndpoint(MASS_STORAGE_IN_EPNUM, EP_TYPE_BULK,
+									ENDPOINT_DIR_IN, MASS_STORAGE_IO_EPSIZE,
+									ENDPOINT_BANK_DOUBLE))) {
 		LEDs_SetAllLEDs(LEDMASK_USB_ERROR);
 	}
-	
-	if (!(Endpoint_ConfigureEndpoint(MASS_STORAGE_OUT_EPNUM, EP_TYPE_BULK,
-		                             ENDPOINT_DIR_OUT, MASS_STORAGE_IO_EPSIZE,
-	                                 ENDPOINT_BANK_DOUBLE)))
-	{
+
+	if(!(Endpoint_ConfigureEndpoint(MASS_STORAGE_OUT_EPNUM, EP_TYPE_BULK,
+									ENDPOINT_DIR_OUT, MASS_STORAGE_IO_EPSIZE,
+									ENDPOINT_BANK_DOUBLE))) {
 		LEDs_SetAllLEDs(LEDMASK_USB_ERROR);
-	}							   
+	}
 }
 
 /** Event handler for the USB_UnhandledControlPacket event. This is used to catch standard and class specific
@@ -171,34 +167,31 @@ void EVENT_USB_Device_ConfigurationChanged(void)
 void EVENT_USB_Device_UnhandledControlRequest(void)
 {
 	/* Process UFI specific control requests */
-	switch (USB_ControlRequest.bRequest)
-	{
-		case REQ_MassStorageReset:
-			if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
-			{
-				Endpoint_ClearSETUP();
+	switch(USB_ControlRequest.bRequest) {
+	case REQ_MassStorageReset:
+		if(USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE)) {
+			Endpoint_ClearSETUP();
 
-				/* Indicate that the current transfer should be aborted */
-				IsMassStoreReset = true;
+			/* Indicate that the current transfer should be aborted */
+			IsMassStoreReset = true;
 
-				Endpoint_ClearStatusStage();
-			}
+			Endpoint_ClearStatusStage();
+		}
 
-			break;
-		case REQ_GetMaxLUN:
-			if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
-			{
-				Endpoint_ClearSETUP();
+		break;
+	case REQ_GetMaxLUN:
+		if(USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE)) {
+			Endpoint_ClearSETUP();
 
-				/* Indicate to the host the number of supported LUNs (virtual disks) on the device */
-				Endpoint_Write_Byte(TOTAL_LUNS - 1);
-				
-				Endpoint_ClearIN();
-				
-				Endpoint_ClearStatusStage();
-			}
-			
-			break;
+			/* Indicate to the host the number of supported LUNs (virtual disks) on the device */
+			Endpoint_Write_Byte(TOTAL_LUNS - 1);
+
+			Endpoint_ClearIN();
+
+			Endpoint_ClearStatusStage();
+		}
+
+		break;
 	}
 }
 
@@ -208,58 +201,56 @@ void EVENT_USB_Device_UnhandledControlRequest(void)
 void MassStorage_Task(void)
 {
 	/* Device must be connected and configured for the task to run */
-	if (USB_DeviceState != DEVICE_STATE_Configured)
-	  return;
-	  
+	if(USB_DeviceState != DEVICE_STATE_Configured) {
+		return;
+	}
+
 	/* Select the Data Out Endpoint */
 	Endpoint_SelectEndpoint(MASS_STORAGE_OUT_EPNUM);
-	
+
 	/* Check to see if a command from the host has been issued */
-	if (Endpoint_IsReadWriteAllowed())
-	{
+	if(Endpoint_IsReadWriteAllowed()) {
 		/* Indicate busy */
 		LEDs_SetAllLEDs(LEDMASK_USB_BUSY);
 
 		/* Process sent command block from the host */
-		if (ReadInCommandBlock())
-		{
+		if(ReadInCommandBlock()) {
 			/* Check direction of command, select Data IN endpoint if data is from the device */
-			if (CommandBlock.Flags & COMMAND_DIRECTION_DATA_IN)
-			  Endpoint_SelectEndpoint(MASS_STORAGE_IN_EPNUM);
+			if(CommandBlock.Flags & COMMAND_DIRECTION_DATA_IN) {
+				Endpoint_SelectEndpoint(MASS_STORAGE_IN_EPNUM);
+			}
 
 			/* Decode the received SCSI command, set returned status code */
-			CommandStatus.Status = SCSI_DecodeSCSICommand() ? Command_Pass : Command_Fail;		
+			CommandStatus.Status = SCSI_DecodeSCSICommand() ? Command_Pass : Command_Fail;
 
 			/* Load in the CBW tag into the CSW to link them together */
 			CommandStatus.Tag = CommandBlock.Tag;
 
 			/* Load in the data residue counter into the CSW */
 			CommandStatus.DataTransferResidue = CommandBlock.DataTransferLength;
-			
+
 			/* Stall the selected data pipe if command failed (if data is still to be transferred) */
-			if ((CommandStatus.Status == Command_Fail) && (CommandStatus.DataTransferResidue))
-			  Endpoint_StallTransaction();
+			if((CommandStatus.Status == Command_Fail) && (CommandStatus.DataTransferResidue)) {
+				Endpoint_StallTransaction();
+			}
 
 			/* Return command status block to the host */
 			ReturnCommandStatus();
 
 			/* Indicate ready */
 			LEDs_SetAllLEDs(LEDMASK_USB_READY);
-		}
-		else
-		{
+		} else {
 			/* Indicate error reading in the command block from the host */
 			LEDs_SetAllLEDs(LEDMASK_USB_ERROR);
 		}
 	}
 
 	/* Check if a Mass Storage Reset occurred */
-	if (IsMassStoreReset)
-	{
+	if(IsMassStoreReset) {
 		/* Reset the data endpoint banks */
 		Endpoint_ResetFIFO(MASS_STORAGE_OUT_EPNUM);
 		Endpoint_ResetFIFO(MASS_STORAGE_IN_EPNUM);
-		
+
 		Endpoint_SelectEndpoint(MASS_STORAGE_OUT_EPNUM);
 		Endpoint_ClearStall();
 		Endpoint_ResetDataToggle();
@@ -284,39 +275,40 @@ static bool ReadInCommandBlock(void)
 
 	/* Read in command block header */
 	Endpoint_Read_Stream_LE(&CommandBlock, (sizeof(CommandBlock) - sizeof(CommandBlock.SCSICommandData)),
-	                        StreamCallback_AbortOnMassStoreReset);
+							StreamCallback_AbortOnMassStoreReset);
 
 	/* Check if the current command is being aborted by the host */
-	if (IsMassStoreReset)
-	  return false;
+	if(IsMassStoreReset) {
+		return false;
+	}
 
 	/* Verify the command block - abort if invalid */
-	if ((CommandBlock.Signature         != CBW_SIGNATURE) ||
-	    (CommandBlock.LUN               >= TOTAL_LUNS)    ||
-		(CommandBlock.Flags              & 0x1F)          ||
-		(CommandBlock.SCSICommandLength == 0)             ||
-		(CommandBlock.SCSICommandLength >  MAX_SCSI_COMMAND_LENGTH))
-	{
+	if((CommandBlock.Signature         != CBW_SIGNATURE) ||
+			(CommandBlock.LUN               >= TOTAL_LUNS)    ||
+			(CommandBlock.Flags              & 0x1F)          ||
+			(CommandBlock.SCSICommandLength == 0)             ||
+			(CommandBlock.SCSICommandLength >  MAX_SCSI_COMMAND_LENGTH)) {
 		/* Stall both data pipes until reset by host */
 		Endpoint_StallTransaction();
 		Endpoint_SelectEndpoint(MASS_STORAGE_IN_EPNUM);
 		Endpoint_StallTransaction();
-		
+
 		return false;
 	}
 
 	/* Read in command block command data */
 	Endpoint_Read_Stream_LE(&CommandBlock.SCSICommandData,
-	                        CommandBlock.SCSICommandLength,
-	                        StreamCallback_AbortOnMassStoreReset);
-	  
+							CommandBlock.SCSICommandLength,
+							StreamCallback_AbortOnMassStoreReset);
+
 	/* Check if the current command is being aborted by the host */
-	if (IsMassStoreReset)
-	  return false;
+	if(IsMassStoreReset) {
+		return false;
+	}
 
 	/* Finalize the stream transfer to send the last packet */
 	Endpoint_ClearOUT();
-	
+
 	return true;
 }
 
@@ -329,31 +321,32 @@ static void ReturnCommandStatus(void)
 	Endpoint_SelectEndpoint(MASS_STORAGE_OUT_EPNUM);
 
 	/* While data pipe is stalled, wait until the host issues a control request to clear the stall */
-	while (Endpoint_IsStalled())
-	{
+	while(Endpoint_IsStalled()) {
 		/* Check if the current command is being aborted by the host */
-		if (IsMassStoreReset)
-		  return;
+		if(IsMassStoreReset) {
+			return;
+		}
 	}
 
 	/* Select the Data In endpoint */
 	Endpoint_SelectEndpoint(MASS_STORAGE_IN_EPNUM);
 
 	/* While data pipe is stalled, wait until the host issues a control request to clear the stall */
-	while (Endpoint_IsStalled())
-	{
+	while(Endpoint_IsStalled()) {
 		/* Check if the current command is being aborted by the host */
-		if (IsMassStoreReset)
-		  return;
+		if(IsMassStoreReset) {
+			return;
+		}
 	}
-	
+
 	/* Write the CSW to the endpoint */
 	Endpoint_Write_Stream_LE(&CommandStatus, sizeof(CommandStatus),
-	                          StreamCallback_AbortOnMassStoreReset);
-	
+							 StreamCallback_AbortOnMassStoreReset);
+
 	/* Check if the current command is being aborted by the host */
-	if (IsMassStoreReset)
-	  return;
+	if(IsMassStoreReset) {
+		return;
+	}
 
 	/* Finalize the stream transfer to send the last packet */
 	Endpoint_ClearIN();
@@ -363,11 +356,12 @@ static void ReturnCommandStatus(void)
  *  if a Mass Storage Reset request has been issued to the control endpoint.
  */
 uint8_t StreamCallback_AbortOnMassStoreReset(void)
-{	
+{
 	/* Abort if a Mass Storage reset command was received */
-	if (IsMassStoreReset)
-	  return STREAMCALLBACK_Abort;
-	
+	if(IsMassStoreReset) {
+		return STREAMCALLBACK_Abort;
+	}
+
 	/* Continue with the current stream operation */
 	return STREAMCALLBACK_Continue;
 }

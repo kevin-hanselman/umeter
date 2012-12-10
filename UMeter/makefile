@@ -102,7 +102,7 @@ FORMAT = ihex
 
 
 # Target file name (without extension).
-TARGET = MassStorage
+TARGET = UMeter
 
 
 # Object files directory
@@ -112,8 +112,7 @@ OBJDIR = .
 
 
 # Path to the LUFA library
-#LUFA_PATH = ../LUFA_091223
-LUFA_PATH = ../LUFA-120730
+LUFA_PATH = ../LUFA_091223
 
 
 # LUFA library compile-time options
