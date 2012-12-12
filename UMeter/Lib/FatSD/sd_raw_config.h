@@ -56,7 +56,7 @@ extern "C"
  * \note When SD_RAW_WRITE_SUPPORT is 1, SD_RAW_SAVE_RAM will
  *       be reset to 0.
  */
-#define SD_RAW_SAVE_RAM 1
+#define SD_RAW_SAVE_RAM 0
 
 /**
  * \ingroup sd_raw_config
@@ -98,15 +98,8 @@ extern "C"
     #define unselect_card() PORTB |= (1 << PORTB4)
 #elif defined(__AVR_ATmega64__) || \
       defined(__AVR_ATmega128__) || \
-      defined(__AVR_ATmega169__)
-    #define configure_pin_mosi() DDRB |= (1 << DDB2)
-    #define configure_pin_sck() DDRB |= (1 << DDB1)
-    #define configure_pin_ss() DDRB |= (1 << DDB0)
-    #define configure_pin_miso() DDRB &= ~(1 << DDB3)
-
-    #define select_card() PORTB &= ~(1 << PORTB0)
-    #define unselect_card() PORTB |= (1 << PORTB0)
-#elif defined(__AVR_ATmega32U4__)
+      defined(__AVR_ATmega169__) || \
+      defined(__AVR_ATmega32U4__)
     #define configure_pin_mosi() DDRB |= (1 << DDB2)
     #define configure_pin_sck() DDRB |= (1 << DDB1)
     #define configure_pin_ss() DDRB |= (1 << DDB0)
@@ -118,15 +111,13 @@ extern "C"
     #error "no sd/mmc pin mapping available!"
 #endif
 
-// From Sparkfun OpenLog
-//My 2 hour pitfall: If not using card detect or write protect, assign these values:
 //#define configure_pin_available() DDRC &= ~(1 << DDC4)
 //#define configure_pin_locked() DDRC &= ~(1 << DDC5)
 #define configure_pin_available() //Do nothing
 #define configure_pin_locked() //Do nothing
 
-//#define get_pin_available() ((PINC >> PC4) & 0x01)
-//#define get_pin_locked() ((PINC >> PC5) & 0x01)
+//#define get_pin_available() (PINC & (1 << PINC4))
+//#define get_pin_locked() (PINC & (1 << PINC5))
 #define get_pin_available() (0) //Emulate that the card is present
 #define get_pin_locked() (1) //Emulate that the card is always unlocked
 

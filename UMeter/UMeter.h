@@ -43,8 +43,8 @@
 
 		#include "Descriptors.h"
 
-		#include "Lib/SCSI.h"
-		#include "Lib/SDCardManager.h"
+		#include "Lib/MassStorage/SCSI.h"
+		#include "Lib/FatSD/SDCardManager.h"
 
 		#include <LUFA/Version.h>
 		#include <LUFA/Drivers/USB/USB.h>

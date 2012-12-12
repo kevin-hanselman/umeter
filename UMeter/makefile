@@ -1,6 +1,6 @@
 # Hey Emacs, this is a -*- makefile -*-
 #----------------------------------------------------------------------------
-# WinAVR Makefile Template written by Eric B. Weddington, Jörg Wunsch, et al.
+# WinAVR Makefile Template written by Eric B. Weddington, JÃ¶rg Wunsch, et al.
 #  >> Modified for use with the LUFA project. <<
 #
 # Released to the Public Domain
@@ -125,15 +125,16 @@ LUFA_OPTS += -D INTERRUPT_CONTROL_ENDPOINT
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c                                                 \
-	  Descriptors.c                                               \
-	  Lib/SCSI.c                                                  \
-	  Lib/SDCardManager.c                                         \
-	  Lib/sd_raw.c                                                \
-	  Lib/partition.c \
-	  Lib/fat.c \
-	  Lib/byteordering.c \
-	  Lib/umeter_adc.c \
+SRC = $(TARGET).c \
+	  Descriptors.c \
+	  Lib/MassStorage/SCSI.c \
+	  Lib/FatSD/SDCardManager.c \
+	  Lib/FatSD/sd_raw.c \
+	  Lib/FatSD/partition.c \
+	  Lib/FatSD/fat.c \
+	  Lib/FatSD/byteordering.c \
+	  Lib/Inputs/umeter_adc.c \
+	  Lib/INI/ini.c \
 	  $(LUFA_PATH)/LUFA/Drivers/Peripheral/SerialStream.c         \
 	  $(LUFA_PATH)/LUFA/Drivers/USB/LowLevel/DevChapter9.c        \
 	  $(LUFA_PATH)/LUFA/Drivers/USB/LowLevel/Endpoint.c           \
