@@ -45,6 +45,10 @@ int ini_parse_file(struct fat_file_struct* file,
                                   const char* name, const char* value),
                    void* user);
 
+#ifndef INI_DEBUG
+#define INI_DEBUG 0
+#endif
+
 /* Nonzero to allow multi-line value parsing, in the style of Python's
    ConfigParser. If allowed, ini_parse() will call the handler with the same
    name for each subsequent line parsed. */

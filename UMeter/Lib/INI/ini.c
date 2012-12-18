@@ -20,6 +20,8 @@ http://code.google.com/p/inih/
 #define MAX_SECTION 50
 #define MAX_NAME 50
 
+int fat_read_line(struct fat_file_struct* fd, uint8_t* buffer, uint8_t buffer_len);
+
 /* Strip whitespace chars off end of given string, in place. Return s. */
 static char* rstrip(char* s)
 {
@@ -81,14 +83,21 @@ int ini_parse_file(struct fat_file_struct* file,
     int error = 0;
 
 #if !INI_USE_STACK
-    line = (char*)malloc(INI_MAX_LINE);
+    line = (unsigned char*)malloc(INI_MAX_LINE);
     if (!line) {
         return -2;
     }
 #endif
-
+#if INI_DEBUG
+	printf("reading ini file...\r\n");
+#endif
     /* Scan through file line by line */
-    while (fat_read_file(file, line, INI_MAX_LINE) == INI_MAX_LINE) {
+    //while ( (error = fat_read_file(file, line, sizeof(line))) > 0) {
+		//line[error] = '\0';
+	while(fat_read_line(file, line, sizeof(line)) > 0) {
+#if INI_DEBUG
+		printf("read: '%s'\r\n", line);
+#endif
         lineno++;
 
         start = line;
@@ -108,8 +117,12 @@ int ini_parse_file(struct fat_file_struct* file,
         else if (*prev_name && *start && start > line) {
             /* Non-black line with leading whitespace, treat as continuation
                of previous name's value (as per Python ConfigParser). */
-            if (!handler(user, section, prev_name, start) && !error)
+            if (!handler(user, section, prev_name, start) && !error) {
                 error = lineno;
+#if INI_DEBUG
+				printf("multiline error\r\n");
+#endif
+			}
         }
 #endif
         else if (*start == '[') {
@@ -123,6 +136,9 @@ int ini_parse_file(struct fat_file_struct* file,
             else if (!error) {
                 /* No ']' found on section line */
                 error = lineno;
+#if INI_DEBUG				
+				printf("No ']' found on section line\r\n");
+#endif
             }
         }
         else if (*start && *start != ';') {
@@ -142,22 +158,76 @@ int ini_parse_file(struct fat_file_struct* file,
 
                 /* Valid name[=:]value pair found, call handler */
                 strncpy0(prev_name, name, sizeof(prev_name));
-                if (!handler(user, section, name, value) && !error)
-                    error = lineno;
+                if (!handler(user, section, name, value) && !error) {
+#if INI_DEBUG					
+					printf("error handling name/value pair\r\n");
+#endif
+					error = lineno;
+				}
             }
             else if (!error) {
                 /* No '=' or ':' found on name[=:]value line */
+#if INI_DEBUG				
+				printf("No '=' or ':' found on name[=:]value line\r\n");
+#endif
                 error = lineno;
             }
         }
     }
-
 #if !INI_USE_STACK
     free(line);
 #endif
 
     return error;
 }
+
+// reads a file from the SD card one line at a time
+int fat_read_line(struct fat_file_struct* fd, uint8_t* buffer, uint8_t buffer_len)
+{
+	char internal[INI_MAX_LINE];
+	int bytesRead, bytesToCopy;
+	int32_t offset;
+	char* pchar;
+	
+	bytesRead = fat_read_file(fd, internal, INI_MAX_LINE);
+#if INI_DEBUG	
+	printf("read_line start: bytesRead=%d\r\n", bytesRead);
+#endif
+	if(bytesRead > 0) { // 0 on EOF, bytes read for >0
+		pchar = strchr(internal, '\n'); // return a pointer to the first matching char
+		if(pchar) { // if newline found, compute byte number for matching char
+			bytesToCopy = pchar - internal + 1;
+		}
+		else { // if newline not found, copy all the bytes read
+			bytesToCopy = bytesRead;
+		}
+		if(bytesToCopy > buffer_len) {
+			// warn user or exit?
+			bytesToCopy = buffer_len;
+		}
+		// copy the bytes to the destination buffer
+		strncpy0(buffer, internal, bytesToCopy);
+
+		// seek backwards from current file pointer to end of copied text
+		offset = bytesToCopy - bytesRead;
+		//offset = bytesToCopy;
+#if INI_DEBUG		
+		printf("offset=%d, bytesRead=%d, bytesToCopy=%d\r\n", (int)offset, bytesRead, bytesToCopy);
+#endif
+		if(!fat_seek_file(fd, &offset, FAT_SEEK_CUR)) {
+		//if(!fat_seek_file(fd, &offset, FAT_SEEK_SET)) {
+#if INI_DEBUG			
+			printf("fat_seek_file: failure\r\n");
+#endif
+		}
+#if INI_DEBUG		
+		printf("after seek: offset=%d\r\n", offset);
+#endif
+		return bytesToCopy;
+	}
+	return bytesRead;
+}
+
 
 /* See documentation in header file. */
 int ini_parse(const char* filename,
@@ -171,9 +241,7 @@ int ini_parse(const char* filename,
 
     file = open_file_in_dir(fs, dd, filename);
     if (!file) {
-#if DEBUG
-		printf_P(PSTR("error opening file\r\n"));
-#endif
+		printf("error opening file\r\n");
         return -1;
 	}
     error = ini_parse_file(file, handler, user);

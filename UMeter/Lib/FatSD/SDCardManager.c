@@ -48,6 +48,8 @@ this software.
 #include "sd_raw.h"
 #include "sd_raw_config.h"
 
+#include "Lib/INI/umeter_ini.h"
+
 #include "Lib/Inputs/umeter_adc.h"
 
 #define DEBUG 1
@@ -134,6 +136,17 @@ void UMeter_Init(void)
 #if DEBUG
 		printf_P(PSTR("error creating file\r\n"));
 #endif
+	}
+
+	// create config file if it doesn't exist
+	if(!fat_create_file(dd, "umeter.ini", &file_entry)) {
+#if DEBUG
+		printf_P(PSTR("error creating file\r\n"));
+#endif
+	}
+
+	if(!get_umeter_ini(fs, dd)) {
+		printf_P(PSTR("umeter_init(): error getting config struct\r\n"));
 	}
 }
 
@@ -340,7 +353,7 @@ void SDCardManager_ReadBlocks(uint32_t BlockAddress, uint16_t TotalBlocks)
 	uint16_t CurrPage          = BlockAddress;
 	uint16_t CurrPageByte      = 0;
 #if DEBUG
-	printf_P(PSTR("R %li %i\r\n"), BlockAddress, TotalBlocks);
+	//printf_P(PSTR("R %li %i\r\n"), BlockAddress, TotalBlocks);
 #endif
 	//printf("\r"); // blink FTDI LED
 

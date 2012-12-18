@@ -135,6 +135,7 @@ SRC = $(TARGET).c \
 	  Lib/FatSD/byteordering.c \
 	  Lib/Inputs/umeter_adc.c \
 	  Lib/INI/ini.c \
+	  Lib/INI/umeter_ini.c \
 	  $(LUFA_PATH)/LUFA/Drivers/Peripheral/SerialStream.c         \
 	  $(LUFA_PATH)/LUFA/Drivers/USB/LowLevel/DevChapter9.c        \
 	  $(LUFA_PATH)/LUFA/Drivers/USB/LowLevel/Endpoint.c           \
