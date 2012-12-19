@@ -10,6 +10,7 @@
 		#include <avr/io.h>
 		
 		#include "UMeter.h"
+		#include "Lib/INI/umeter_ini.h"
 		#include "Descriptors.h"
 		
 		#include <LUFA/Common/Common.h>
@@ -24,7 +25,7 @@
 	/* Function Prototypes: */
 		void SDCardManager_Init(void);
 		
-		void UMeter_Init(void);
+		umeter_config const* UMeter_Init(void);
 		void UMeter_Task(void);
 		
 		uint32_t SDCardManager_GetNbBlocks(void);

@@ -135,6 +135,7 @@
 	/* Function Prototypes: */
 		void SetupHardware(void);
 		void MassStorage_Task(void);
+		void my_delay_ms(uint16_t count);
 	
 		void EVENT_USB_Device_Connect(void);
 		void EVENT_USB_Device_Disconnect(void);

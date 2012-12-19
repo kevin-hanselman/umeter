@@ -2,9 +2,17 @@
 *.o
 
 # Misc
-*.lst
 *.orig
 *.bak
+
+# AVR
+*.lst
+*.eep
+*.elf
+*.hex
+*.lss
+*.map
+*.sym
 
 # Libraries
 *.lib

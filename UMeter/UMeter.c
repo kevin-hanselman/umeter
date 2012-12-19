@@ -36,6 +36,8 @@
 
 #define  INCLUDE_FROM_UMETER_C
 #include "UMeter.h"
+#include "Lib/INI/umeter_ini.h"
+#include "Lib/Inputs/umeter_adc.h"
 #include <util/delay.h>
 
 #define DEBUG 1
@@ -62,10 +64,12 @@ int main(void)
 	DDRC &= ~(1 << PC6);		// PD6 is input
 	PORTC |= (1 << PC6);		// PD6 pull up resistor enabled
 
-	asm("nop");
+	asm("nop");	// give the internal pull up resistor some time
 	asm("nop");
 	asm("nop");
 
+	putchar(12); // send form feed char; clear the minicom screen
+	
 	if(PINC & (1 << PC6)) {
 #if DEBUG
 		printf_P(PSTR("Entering Mass Storage Mode\r\n"));
@@ -89,12 +93,33 @@ void mass_storage_main(void)
 
 void data_logger_main(void)
 {
-	UMeter_Init();
+	unsigned int delay;
 	adc_init();
-
+	umeter_config const* umeter = UMeter_Init();
+	if(umeter) {
+		
+	}
+	else {
+#if DEBUG
+		printf_P(PSTR("umeter_init(): error getting config struct\r\n"));
+#endif
+		return;
+	}
+	delay = umeter->sampling_interval;
 	for(;;) {
-		_delay_ms(1000);
+		my_delay_ms(delay);
 		UMeter_Task();
+	}
+}
+
+void my_delay_ms(uint16_t count)
+{
+// 	while(count > 0) {
+// 		count -= 10;
+// 		_delay_ms(10);
+// 	}
+	while(count--) {
+		_delay_ms(1);
 	}
 }
 

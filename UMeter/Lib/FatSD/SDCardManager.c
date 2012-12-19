@@ -127,7 +127,7 @@ void SDCardManager_Init(void)
 }
 
 
-void UMeter_Init(void)
+umeter_config const* UMeter_Init(void)
 {
 	struct fat_dir_entry_struct file_entry;
 
@@ -144,10 +144,7 @@ void UMeter_Init(void)
 		printf_P(PSTR("error creating file\r\n"));
 #endif
 	}
-
-	if(!get_umeter_ini(fs, dd)) {
-		printf_P(PSTR("umeter_init(): error getting config struct\r\n"));
-	}
+	return get_umeter_ini(fs, dd);;
 }
 
 
