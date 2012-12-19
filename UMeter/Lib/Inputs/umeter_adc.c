@@ -53,3 +53,10 @@ int float2str(float f, char* buff)
 	int right = (f - left) * 1000;	// decimal section
 	return sprintf(buff, "%d.%03d ", left, right);
 }
+
+int float2nstr(float f, char* buff, unsigned int n)
+{
+	int left = (int)f;		// integer section
+	int right = (f - left) * (10^n);	// decimal section
+	return sprintf(buff, "%d.%0*d ", left, n, right);
+}

@@ -350,7 +350,7 @@ void SDCardManager_ReadBlocks(uint32_t BlockAddress, uint16_t TotalBlocks)
 	uint16_t CurrPage          = BlockAddress;
 	uint16_t CurrPageByte      = 0;
 #if DEBUG
-	//printf_P(PSTR("R %li %i\r\n"), BlockAddress, TotalBlocks);
+	printf_P(PSTR("R %li %i\r\n"), BlockAddress, TotalBlocks);
 #endif
 	//printf("\r"); // blink FTDI LED
 

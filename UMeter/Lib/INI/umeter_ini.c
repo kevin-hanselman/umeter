@@ -6,6 +6,7 @@
 #include <avr/sleep.h>
 
 #include "ini.h"
+#include "Lib/Inputs/umeter_adc.h"
 
 static umeter_config umeter;
 
@@ -16,12 +17,13 @@ static int ini_handler(void* user,
 {
 	uint8_t InvalidValue = 0;
 	unsigned int x;
+	int8_t sensor_idx = -1;
 	umeter_config* pconfig = (umeter_config*)user;
 #if INI_DEBUG	
 	printf_P(PSTR("ini_handler: section=%s, name=%s, value=%s\r\n"), section, name, value);
 #endif
     #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
-    if (MATCH("", "sampling_interval")) {
+    if (MATCH("UMeter", "sampling_interval")) {
 		x = atoi(value);
 		//printf("x=%d\r\n", x);
 		if(x >= SAMPLING_MIN && x <= SAMPLING_MAX) {
@@ -30,12 +32,32 @@ static int ini_handler(void* user,
 		else {
 			InvalidValue = 1;
 		}
-    } else if (MATCH("", "username")) {
-        pconfig->username = strdup(value);
-    } else {
-		printf_P(PSTR("ini_handler: unknown section/name\r\n"));
-        return 0;  /* unknown section/name, error */
-    }
+    } else if (strcmp(section, "Sensor 1") == 0) {
+		sensor_idx = sensor1;
+    } else if (strcmp(section, "Sensor 2") == 0) {
+		sensor_idx = sensor2;
+	} else if (strcmp(section, "Sensor 3") == 0) {
+		sensor_idx = sensor3;
+    } else if (strcmp(section, "Sensor 4") == 0) {
+		sensor_idx = sensor4;
+	}
+	if(sensor_idx >= 0) { // sensor index valid
+		if(strcmp(name,"enabled") == 0) {
+			pconfig->sensors[sensor_idx].enabled = atoi(value);
+		} else if(strcmp(name,"raw_output") == 0) {
+			pconfig->sensors[sensor_idx].raw_output = atoi(value);
+		} else if(strcmp(name,"units") == 0) {
+			pconfig->sensors[sensor_idx].units = strdup(value);
+		} else if(strcmp(name,"offset") == 0) {
+			pconfig->sensors[sensor_idx].offset = atof(value);
+		} else if(strcmp(name,"slope") == 0) {
+			pconfig->sensors[sensor_idx].slope = atof(value);
+		}
+	}
+// 	if(0) {
+// 		printf_P(PSTR("ini_handler: unknown section/name\r\n"));
+//         return 0;  /* unknown section/name, error */
+//     }
     if(InvalidValue) {
 		printf_P(PSTR("ini_handler: invalid value in field '%s'. Using default value.\r\n"), name);
 	}
@@ -44,9 +66,17 @@ static int ini_handler(void* user,
 
 umeter_config const * get_umeter_ini(struct fat_fs_struct* fs, struct fat_dir_struct* dir)
 {
+	const sensor sensor_defaults = {
+		1,		// enabled
+		1,		// raw_voltage
+		"n/a",	// units,  won't be used
+		0.0, 	// offset, "
+		0.0		// slope,  "
+	};
+	
 	const umeter_config umeter_defaults = {
 		1000, // sampling_interval
-		"umeter" // username
+		{sensor_defaults, sensor_defaults, sensor_defaults, sensor_defaults} // default for all sensors
 	};
 	
 	static int populated = 0;
@@ -62,10 +92,24 @@ umeter_config const * get_umeter_ini(struct fat_fs_struct* fs, struct fat_dir_st
 			printf_P(PSTR("Bad config file (first error on line %d)\r\n"), err);
 			return 0;
 		}
-		printf_P(PSTR("Loaded 'umeter.ini': sampling_interval=%d, username=%s\r\n"),
-				umeter.sampling_interval,
-				umeter.username);
+		printf_P(PSTR("Loaded 'umeter.ini': \r\n"));
+		print_config();
 		populated = 1;
 	}
     return &umeter;
+}
+
+void print_config(void)
+{
+	int i;
+	printf_P(PSTR("UMETER CONFIG\r\nsampling_interval=%d\r\n"), umeter.sampling_interval);
+	for(i=0; i<4; i++) {
+		sensor s = umeter.sensors[i];
+		char* offset[8];
+		float2str(s.offset, offset);
+		char* slope[8];
+		float2str(s.slope, slope);
+		printf_P(PSTR("Sensor %d: enabled=%d, raw_output=%d, units=%s, offset=%s, slope=%s\r\n"),
+				i+1, s.enabled, s.raw_output, s.units, offset, slope);
+	}
 }
