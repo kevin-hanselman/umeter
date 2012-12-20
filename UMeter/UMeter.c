@@ -61,8 +61,6 @@ void data_logger_main(void);
 int main(void)
 {
 	SetupHardware();
-	DDRC &= ~(1 << PC6);		// PD6 is input
-	PORTC |= (1 << PC6);		// PD6 pull up resistor enabled
 
 	asm("nop");	// give the internal pull up resistor some time
 	asm("nop");
@@ -138,6 +136,11 @@ void SetupHardware(void)
 	SerialStream_Init(9600, false);
 	SDCardManager_Init();
 	USB_Init();
+	
+	DDRC &= ~(1 << PC6);		// PD6 is input
+	PORTC |= (1 << PC6);		// PD6 pull up resistor enabled
+	
+	DDRD |= (1 << PD6); // PD6 as output
 }
 
 /** Event handler for the USB_Connect event. This indicates that the device is enumerating via the status LEDs. */

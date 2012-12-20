@@ -17,6 +17,7 @@ static int ini_handler(void* user,
 {
 	uint8_t InvalidValue = 0;
 	unsigned int x;
+	float y;
 	int8_t sensor_idx = -1;
 	umeter_config* pconfig = (umeter_config*)user;
 #if INI_DEBUG	
@@ -51,7 +52,13 @@ static int ini_handler(void* user,
 		} else if(strcmp(name,"offset") == 0) {
 			pconfig->sensors[sensor_idx].offset = atof(value);
 		} else if(strcmp(name,"slope") == 0) {
-			pconfig->sensors[sensor_idx].slope = atof(value);
+			y = atof(value);
+			if(y) { // avoid divide by zero
+				pconfig->sensors[sensor_idx].slope = y;
+			}
+			else {
+				InvalidValue = 1;
+			}
 		}
 	}
 // 	if(0) {
@@ -59,7 +66,7 @@ static int ini_handler(void* user,
 //         return 0;  /* unknown section/name, error */
 //     }
     if(InvalidValue) {
-		printf_P(PSTR("ini_handler: invalid value in field '%s'. Using default value.\r\n"), name);
+		printf_P(PSTR("ini_handler: invalid value for '%s': '%s'. Using default value.\r\n"), section, name);
 	}
     return 1;
 }
@@ -68,10 +75,10 @@ umeter_config const * get_umeter_ini(struct fat_fs_struct* fs, struct fat_dir_st
 {
 	const sensor sensor_defaults = {
 		1,		// enabled
-		1,		// raw_voltage
+		1,		// raw_output
 		"n/a",	// units,  won't be used
 		0.0, 	// offset, "
-		0.0		// slope,  "
+		1.0		// slope,  "
 	};
 	
 	const umeter_config umeter_defaults = {

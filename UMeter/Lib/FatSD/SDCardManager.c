@@ -49,10 +49,11 @@ this software.
 #include "sd_raw_config.h"
 
 #include "Lib/INI/umeter_ini.h"
-
 #include "Lib/Inputs/umeter_adc.h"
 
 #define DEBUG 1
+#define LED_ON()	PORTD |= (1<<PD6)
+#define LED_OFF()	PORTD &= ~(1<<PD6)
 
 static struct sd_raw_info disk_info;
 static uint32_t CachedTotalBlocks = 0;
@@ -134,25 +135,27 @@ umeter_config const* UMeter_Init(void)
 	// create data log file if it doesn't exist
 	if(!fat_create_file(dd, "umeter.txt", &file_entry)) {
 #if DEBUG
-		printf_P(PSTR("error creating file\r\n"));
+		printf_P(PSTR("error creating file 'umeter.txt'\r\n"));
 #endif
 	}
 
 	// create config file if it doesn't exist
 	if(!fat_create_file(dd, "umeter.ini", &file_entry)) {
 #if DEBUG
-		printf_P(PSTR("error creating file\r\n"));
+		printf_P(PSTR("error creating file 'umeter.ini'\r\n"));
 #endif
 	}
-	return get_umeter_ini(fs, dd);;
+	return get_umeter_ini(fs, dd);
 }
 
 
 void UMeter_Task(void)
 {
 	unsigned int n, j, adc;
-	float volts;
+	float volts, out;
 	unsigned char buff[8];
+	unsigned char* units;
+	umeter_config const* umeter;
 #if DEBUG
 	printf_P(PSTR("writing...\r\n"));
 #endif
@@ -172,15 +175,28 @@ void UMeter_Task(void)
 
 // read sensor values
 #if DEBUG
-	printf("sensors = ");
+	printf("sensors: ");
 #endif
-	for(j = 1; j < 5; j++) {
-		select_sensor(j);
+	umeter = get_umeter_ini(fs, dd);
+	for(j = 0; j < 4; j++) {
+		if(!umeter->sensors[j].enabled) { // skip a sensor if it's disabled
+			continue;
+		}
+		LED_ON();
+		select_sensor(j+1);
 		adc = adc_conversion();
-		volts = adc * 2.56 / 1023 * 2; // v_in = ADC_value * Vref / 2^10-1 * volt div. scaler
-		n = float2str(volts, buff);
+		volts = adc * 2.56 / 1023 * 2; // v_in = ADC_value * Vref / (2^10)-1 * volt div. scaler
+		if(umeter->sensors[j].raw_output) {
+			out = volts;
+			units = "V";
+		}
+		else {
+			out = (volts - umeter->sensors[j].offset) / umeter->sensors[j].slope;
+			units = umeter->sensors[j].units;
+		}
+		n = float2str(out, buff);
 #if DEBUG
-		printf("%sV  ", buff);
+		printf("[%d: %s%s] ", j+1, buff, units);
 #endif
 		// write buff to file
 		if(fat_write_file(fd, buff, n) != n) {
@@ -189,6 +205,7 @@ void UMeter_Task(void)
 #endif
 			break;
 		}
+		LED_OFF();
 	}
 #if DEBUG
 	printf("\r\n");
@@ -269,10 +286,10 @@ void SDCardManager_WriteBlocks(uint32_t BlockAddress, uint16_t TotalBlocks)
 {
 	bool     UsingSecondBuffer   = false;
 #if DEBUG
-	printf_P(PSTR("W %li %i\r\n"), BlockAddress, TotalBlocks);
+	//printf_P(PSTR("W %li %i\r\n"), BlockAddress, TotalBlocks);
 #endif
-	//printf("\r"); // blink FTDI LED
-
+	LED_ON();
+	
 	/* Wait until endpoint is ready before continuing */
 	if(Endpoint_WaitUntilReady()) {
 		return;
@@ -295,6 +312,7 @@ void SDCardManager_WriteBlocks(uint32_t BlockAddress, uint16_t TotalBlocks)
 	if(!(Endpoint_IsReadWriteAllowed())) {
 		Endpoint_ClearOUT();
 	}
+	LED_OFF();
 }
 
 /** Reads blocks (OS blocks, not Dataflash pages) from the storage medium, the board dataflash IC(s), into
@@ -350,10 +368,10 @@ void SDCardManager_ReadBlocks(uint32_t BlockAddress, uint16_t TotalBlocks)
 	uint16_t CurrPage          = BlockAddress;
 	uint16_t CurrPageByte      = 0;
 #if DEBUG
-	printf_P(PSTR("R %li %i\r\n"), BlockAddress, TotalBlocks);
+	//printf_P(PSTR("R %li %i\r\n"), BlockAddress, TotalBlocks);
 #endif
-	//printf("\r"); // blink FTDI LED
 
+	LED_ON();
 	/* Wait until endpoint is ready before continuing */
 	if(Endpoint_WaitUntilReady()) {
 		return;
@@ -372,6 +390,7 @@ void SDCardManager_ReadBlocks(uint32_t BlockAddress, uint16_t TotalBlocks)
 	if(!(Endpoint_IsReadWriteAllowed())) {
 		Endpoint_ClearIN();
 	}
+	LED_OFF();
 }
 
 /** Performs a simple test on the attached Dataflash IC(s) to ensure that they are working.
