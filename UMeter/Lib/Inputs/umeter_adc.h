@@ -6,17 +6,17 @@
 #define SENSOR_DDR	DDRF
 #define SENSOR_PRT	PORTF
 
-#define SENSOR1		PF0	//ADC0	// sensor port
-#define SMUX1		0x0		// mux value to select adc input
+#define SENSOR1		PF5	//ADC5	// sensor port
+#define SMUX1		0x5	// mux value to select adc input
 
-#define SENSOR2		PF1	//ADC1
-#define SMUX2		0x1
+#define SENSOR2		PF4	//ADC4
+#define SMUX2		0x4
 
-#define SENSOR3		PF4	//ADC4
-#define SMUX3		0x4
+#define SENSOR3		PF1	//ADC1
+#define SMUX3		0x1
 
-#define SENSOR4		PF5	//ADC5
-#define SMUX4		0x5
+#define SENSOR4		PF0	//ADC0
+#define SMUX4		0x0
 
 void adc_init(void);
 unsigned int adc_conversion(void);

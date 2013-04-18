@@ -344,7 +344,8 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 # Type: avrdude -c ?
 # to get a full listing.
 #
-AVRDUDE_PROGRAMMER = jtagmkII
+#AVRDUDE_PROGRAMMER = jtagmkII
+AVRDUDE_PROGRAMMER = avrispmkII
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
 AVRDUDE_PORT = usb
@@ -542,7 +543,7 @@ gccversion :
 
 
 # Program the device.  
-program: $(TARGET).hex $(TARGET).eep
+prog: $(TARGET).hex $(TARGET).eep
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
 
 flip: $(TARGET).hex
@@ -731,6 +732,10 @@ doxygen:
 clean_doxygen:
 	rm -rf Documentation
 
+fuses:
+	avrdude -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) -U lfuse:w:0xde:m -U hfuse:w:0xd9:m -U efuse:w:0xfb:m
+
+
 # Create object files directory
 $(shell mkdir $(OBJDIR) 2>/dev/null)
 
@@ -744,4 +749,4 @@ $(shell mkdir $(OBJDIR) 2>/dev/null)
 showtarget begin finish end sizebefore sizeafter  \
 gccversion build elf hex eep lss sym coff extcoff \
 program dfu flip flip-ee dfu-ee clean debug       \
-clean_list clean_binary gdb-config doxygen
+clean_list clean_binary gdb-config doxygen fuses

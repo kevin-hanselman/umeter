@@ -8,7 +8,9 @@ void adc_init(void)
 	ADCSRA &=	~(1 << ADATE);	// disable auto-triggering
 	ADCSRA &=	~(1 << ADIE);	// disable ADC interrupt
 	ADCSRA |=	((1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0)); // prescaler division factor 2
-
+	ADCSRB &=	~(1 << MUX5);
+	
+	DIDR0 |= 0x3F;
 	SENSOR_DDR &= ~((1 << SENSOR1) | (1 << SENSOR2) | (1 << SENSOR3) | (1 << SENSOR4)); // set sensor pins to inputs
 	SENSOR_PRT &= ~((1 << SENSOR1) | (1 << SENSOR2) | (1 << SENSOR3) | (1 << SENSOR4)); // set pins low
 }
@@ -16,11 +18,9 @@ void adc_init(void)
 unsigned int adc_conversion(void)
 {
 	ADCSRA |= (1 << ADSC) | (1 << ADIF); // start conversion
-
 	while(!(ADCSRA & (1 << ADIF))) {
 		;    // wait until ADIF (conversion done bit) is set
 	}
-
 	return (ADCL | ((((unsigned int)ADCH) << 8) & 0x300));  // MUST READ ADCL BEFORE ADCH
 }
 

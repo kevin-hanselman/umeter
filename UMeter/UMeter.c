@@ -70,14 +70,14 @@ int main(void)
 	
 	if(PINC & (1 << PC6)) {
 #if DEBUG
-		printf_P(PSTR("Entering Mass Storage Mode\r\n"));
-#endif
-		mass_storage_main();
-	} else {
-#if DEBUG
 		printf_P(PSTR("Entering Data Logger Mode\r\n"));
 #endif
 		data_logger_main();
+	} else {
+#if DEBUG
+		printf_P(PSTR("Entering Mass Storage Mode\r\n"));
+#endif
+		mass_storage_main();
 	}
 }
 
@@ -92,30 +92,23 @@ void mass_storage_main(void)
 void data_logger_main(void)
 {
 	unsigned int delay;
-	adc_init();
-	umeter_config const* umeter = UMeter_Init();
+	const umeter_config const* umeter = UMeter_Init();
 	if(umeter) {
-		
+		delay = umeter->sampling_interval;
+		for(;;) {
+			my_delay_ms(delay);
+			UMeter_Task();
+		}
 	}
 	else {
 #if DEBUG
 		printf_P(PSTR("umeter_init(): error getting config struct\r\n"));
 #endif
-		return;
-	}
-	delay = umeter->sampling_interval;
-	for(;;) {
-		my_delay_ms(delay);
-		UMeter_Task();
 	}
 }
 
 void my_delay_ms(uint16_t count)
 {
-// 	while(count > 0) {
-// 		count -= 10;
-// 		_delay_ms(10);
-// 	}
 	while(count--) {
 		_delay_ms(1);
 	}
@@ -135,12 +128,15 @@ void SetupHardware(void)
 	//LEDs_Init();
 	SerialStream_Init(9600, false);
 	SDCardManager_Init();
+	
 	USB_Init();
 	
-	DDRC &= ~(1 << PC6);		// PD6 is input
-	PORTC |= (1 << PC6);		// PD6 pull up resistor enabled
+	DDRC &= ~(1 << PC6);		// PC6 is input
+	PORTC |= (1 << PC6);		// PC6 pull up resistor enabled
 	
-	DDRD |= (1 << PD6); // PD6 as output
+	DDRB |= (1 << PB6); 		// PD6 as output
+
+	adc_init();
 }
 
 /** Event handler for the USB_Connect event. This indicates that the device is enumerating via the status LEDs. */

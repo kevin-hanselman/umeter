@@ -9,10 +9,10 @@
 
 typedef struct
 {
-	// if the sensor measurement should be written to the SD card, false = 0, other integers are true
+	// if the sensor measurement should be written to the SD card
 	uint8_t enabled;
-	
-	// if the sensor measurement should be a raw voltage, false = 0, other integers are true
+
+	// if the sensor measurement should be a raw voltage
 	uint8_t raw_output;
 
 	// only will be used if 'raw_output' is false
@@ -31,8 +31,6 @@ enum
 {
 	sensor1=0, sensor2, sensor3, sensor4
 } sensor_indeces;
-
-//extern const umeter_config umeter_defaults;
 
 static int ini_handler(void* user,
 					   const char* section,

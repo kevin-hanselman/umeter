@@ -111,12 +111,12 @@ extern "C"
     #error "no sd/mmc pin mapping available!"
 #endif
 
-//#define configure_pin_available() DDRC &= ~(1 << DDC4)
+//#define configure_pin_available() DDRB &= ~(1 << PB7)
 //#define configure_pin_locked() DDRC &= ~(1 << DDC5)
 #define configure_pin_available() //Do nothing
 #define configure_pin_locked() //Do nothing
 
-//#define get_pin_available() (PINC & (1 << PINC4))
+//#define get_pin_available() (PINB & (1 << PINB7))
 //#define get_pin_locked() (PINC & (1 << PINC5))
 #define get_pin_available() (0) //Emulate that the card is present
 #define get_pin_locked() (1) //Emulate that the card is always unlocked

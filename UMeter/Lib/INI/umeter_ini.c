@@ -71,25 +71,24 @@ static int ini_handler(void* user,
     return 1;
 }
 
-umeter_config const * get_umeter_ini(struct fat_fs_struct* fs, struct fat_dir_struct* dir)
+const umeter_config const* get_umeter_ini(struct fat_fs_struct* fs, struct fat_dir_struct* dir)
 {
-	const sensor sensor_defaults = {
-		1,		// enabled
-		1,		// raw_output
-		"n/a",	// units,  won't be used
-		0.0, 	// offset, "
-		1.0		// slope,  "
-	};
-	
-	const umeter_config umeter_defaults = {
-		1000, // sampling_interval
-		{sensor_defaults, sensor_defaults, sensor_defaults, sensor_defaults} // default for all sensors
-	};
-	
 	static int populated = 0;
 	int err;
 	if(!populated) {
-		umeter = umeter_defaults; // set the config struct to all default values
+		const sensor sensor_defaults = {
+			1,		// enabled
+			1,		// raw_output
+			"n/a",	// units, won't be used
+			0.0, 	// offset, won't be used
+			1.0		// slope, won't be used
+		};
+
+		const umeter_config umeter_defaults = {
+			1000, // sampling_interval
+			{sensor_defaults, sensor_defaults, sensor_defaults, sensor_defaults}
+		};
+		umeter = umeter_defaults;
 		err = ini_parse("umeter.ini", ini_handler, &umeter, fs, dir);
 		if (err < 0) {
 			printf_P(PSTR("Can't load/parse 'umeter.ini'\r\n"));
@@ -112,9 +111,9 @@ void print_config(void)
 	printf_P(PSTR("UMETER CONFIG\r\nsampling_interval=%d\r\n"), umeter.sampling_interval);
 	for(i=0; i<4; i++) {
 		sensor s = umeter.sensors[i];
-		char* offset[8];
+		char offset[8];
 		float2str(s.offset, offset);
-		char* slope[8];
+		char slope[8];
 		float2str(s.slope, slope);
 		printf_P(PSTR("Sensor %d: enabled=%d, raw_output=%d, units=%s, offset=%s, slope=%s\r\n"),
 				i+1, s.enabled, s.raw_output, s.units, offset, slope);

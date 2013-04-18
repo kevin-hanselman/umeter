@@ -60,16 +60,16 @@
 	/* Public Interface - May be used in end-application: */
 		/* Macros: */
 			/** LED mask for the first LED on the board. */
-			#define LEDS_LED1        _BV(PORTF4)
+			#define LEDS_LED1        (1<<PB6)
 
 			/** LED mask for the second LED on the board. */
-			#define LEDS_LED2        _BV(PORTF5)
+			#define LEDS_LED2        (1<<PB5)
 
 			/** LED mask for the third LED on the board. */
-			#define LEDS_LED3        _BV(PORTF6)
+			#define LEDS_LED3        (1<<PB4)
 
 			/** LED mask for the fourth LED on the board. */
-			#define LEDS_LED4        _BV(PORTF7)
+			#define LEDS_LED4        (1<<PD7)
 
 			/** LED mask for all the LEDs on the board. */
 			#define LEDS_ALL_LEDS    (LEDS_LED1 | LEDS_LED2 | LEDS_LED3 | LEDS_LED4)

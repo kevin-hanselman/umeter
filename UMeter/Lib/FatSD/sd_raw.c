@@ -197,8 +197,9 @@ uint8_t sd_raw_init()
     /* initialization procedure */
     sd_raw_card_type = 0;
     
-    if(!sd_raw_available())
+    if(!sd_raw_available()) {
         return 0;
+	}
 
     /* card needs 74 cycles minimum to start up */
     for(uint8_t i = 0; i < 10; ++i)

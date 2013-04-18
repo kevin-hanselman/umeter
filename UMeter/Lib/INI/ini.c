@@ -194,7 +194,7 @@ int fat_read_line(struct fat_file_struct* fd, uint8_t* buffer, uint8_t buffer_le
 	printf("read_line start: bytesRead=%d\r\n", bytesRead);
 #endif
 	if(bytesRead > 0) { // 0 on EOF, bytes read for >0
-		pchar = strchr(internal, '\n'); // return a pointer to the first matching char
+		pchar = strchr(internal, '\n'); // return a pointer to the first newline
 		if(pchar) { // if newline found, compute byte number for matching char
 			bytesToCopy = pchar - internal + 1;
 		}
@@ -212,7 +212,8 @@ int fat_read_line(struct fat_file_struct* fd, uint8_t* buffer, uint8_t buffer_le
 		offset = bytesToCopy - bytesRead;
 		//offset = bytesToCopy;
 #if INI_DEBUG		
-		printf("offset=%d, bytesRead=%d, bytesToCopy=%d\r\n", (int)offset, bytesRead, bytesToCopy);
+		printf(	"offset=%d, bytesRead=%d, bytesToCopy=%d\r\n", 
+				(int)offset, bytesRead, bytesToCopy);
 #endif
 		if(!fat_seek_file(fd, &offset, FAT_SEEK_CUR)) {
 		//if(!fat_seek_file(fd, &offset, FAT_SEEK_SET)) {

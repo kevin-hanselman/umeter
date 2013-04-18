@@ -52,14 +52,19 @@ this software.
 #include "Lib/Inputs/umeter_adc.h"
 
 #define DEBUG 1
-#define LED_ON()	PORTD |= (1<<PD6)
-#define LED_OFF()	PORTD &= ~(1<<PD6)
+// teensy
+//#define LED_ON()	PORTD |= (1<<PD6)
+//#define LED_OFF()	PORTD &= ~(1<<PD6)
+
+// pcb
+#define LED_ON()	PORTB &= ~(1<<PB6)
+#define LED_OFF()	PORTB |= (1<<PB6)
 
 static struct sd_raw_info disk_info;
 static uint32_t CachedTotalBlocks = 0;
 static uint8_t Buffer[16];
 
-static struct fat_fs_struct* fs;		// filesystem object
+static struct fat_fs_struct* fs;	// filesystem object
 static struct fat_dir_struct* dd;	// current directory object
 
 void SDCardManager_Init(void)
@@ -124,11 +129,9 @@ void SDCardManager_Init(void)
 #endif
 		return;
 	}
-
 }
 
-
-umeter_config const* UMeter_Init(void)
+const umeter_config const* UMeter_Init(void)
 {
 	struct fat_dir_entry_struct file_entry;
 
@@ -151,15 +154,16 @@ umeter_config const* UMeter_Init(void)
 
 void UMeter_Task(void)
 {
-	unsigned int n, j, adc;
+	int32_t file_pos;		// file position
+	unsigned int n, j, adc;	// n= number of bytes r/w, adc=conv val
 	float volts, out;
 	unsigned char buff[8];
 	unsigned char* units;
-	umeter_config const* umeter;
+	const umeter_config const* umeter;
 #if DEBUG
 	printf_P(PSTR("writing...\r\n"));
 #endif
-// search file in current directory and open it
+	// search file in current directory and open it
 	struct fat_file_struct* fd = open_file_in_dir(fs, dd, "umeter.txt");
 	if(!fd) {
 #if DEBUG
@@ -168,12 +172,32 @@ void UMeter_Task(void)
 		return;
 	}
 
-// seek to EOF to append
-	while(fat_read_file(fd, buff, sizeof(buff)) == sizeof(buff)) {
-		;
+	// seek to EOF to append
+	file_pos = -1;
+	if(!fat_seek_file(fd, &file_pos, FAT_SEEK_END))
+	{
+#if DEBUG
+	   printf_P(PSTR("Error seeking to EOF. Likely trying to seek on an empty file.\r\n"));
+#endif
+	}
+	
+	// check for newline char, add one if none
+	if(file_pos > 0) {
+		if(fat_read_file(fd, buff, 1) != 1) {
+#if DEBUG
+			printf_P(PSTR("error reading 1 byte\r\n"));
+#endif
+		}
+		if(buff[0] != '\n') {
+			if(fat_write_file(fd, "\n", 1) != 1) {
+#if DEBUG
+				printf_P(PSTR("error writing newline\r\n"));
+#endif
+			}
+		}
 	}
 
-// read sensor values
+	// read sensor values
 #if DEBUG
 	printf("sensors: ");
 #endif
@@ -185,7 +209,8 @@ void UMeter_Task(void)
 		LED_ON();
 		select_sensor(j+1);
 		adc = adc_conversion();
-		volts = adc * 2.56 / 1023 * 2; // v_in = ADC_value * Vref / (2^10)-1 * volt div. scaler
+		// v_in = ADC_value * Vref / (2^10)-1 * volt div. scaler
+		volts = adc * 2.56 / 1023 * 2;
 		if(umeter->sensors[j].raw_output) {
 			out = volts;
 			units = "V";
@@ -210,13 +235,12 @@ void UMeter_Task(void)
 #if DEBUG
 	printf("\r\n");
 #endif
-// write newline
+	// write newline
 	if(fat_write_file(fd, "\n", 1) != 1) {
 #if DEBUG
 		printf_P(PSTR("error writing to file\r\n"));
 #endif
 	}
-
 	fat_close_file(fd);
 }
 
