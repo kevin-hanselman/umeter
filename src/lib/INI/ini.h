@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 #include <stdio.h>
-#include "Lib/FatSD/fat.h"
+#include "lib/FatSD/fat.h"
 
 /* Parse given INI-style file. May have [section]s, name=value pairs
    (whitespace stripped), and comments starting with ';' (semicolon). Section

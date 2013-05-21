@@ -6,7 +6,7 @@
 #include <avr/sleep.h>
 
 #include "ini.h"
-#include "Lib/Inputs/umeter_adc.h"
+#include "lib/Inputs/umeter_adc.h"
 
 static umeter_config umeter;
 
