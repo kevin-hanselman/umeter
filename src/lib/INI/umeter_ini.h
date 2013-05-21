@@ -1,7 +1,7 @@
 #ifndef __UMETER_INI_H__
 #define __UMETER_INI_H__
 
-#include "Lib/FatSD/fat.h"
+#include "lib/FatSD/fat.h"
 #include <limits.h>
 
 #define SAMPLING_MAX INT_MAX

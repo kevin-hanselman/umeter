@@ -10,7 +10,7 @@
 		#include <avr/io.h>
 		
 		#include "UMeter.h"
-		#include "Lib/INI/umeter_ini.h"
+		#include "lib/INI/umeter_ini.h"
 		#include "Descriptors.h"
 		
 		#include <LUFA/Common/Common.h>
