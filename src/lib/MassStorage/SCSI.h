@@ -46,8 +46,8 @@
 
 		#include "UMeter.h"
 		#include "Descriptors.h"
-		#include "Lib/FatSD/SDCardManager.h"
-		#include "Lib/MassStorage/SCSI_Codes.h"
+		#include "lib/FatSD/SDCardManager.h"
+		#include "lib/MassStorage/SCSI_Codes.h"
 	
 	/* Macros: */
 		/** Macro to set the current SCSI sense data to the given key, additional sense code and additional sense qualifier. This

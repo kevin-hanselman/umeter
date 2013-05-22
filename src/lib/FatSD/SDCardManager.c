@@ -48,8 +48,8 @@ this software.
 #include "sd_raw.h"
 #include "sd_raw_config.h"
 
-#include "Lib/INI/umeter_ini.h"
-#include "Lib/Inputs/umeter_adc.h"
+#include "lib/INI/umeter_ini.h"
+#include "lib/Inputs/umeter_adc.h"
 
 #define DEBUG 1
 // teensy

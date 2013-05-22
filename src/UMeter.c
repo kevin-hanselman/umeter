@@ -36,8 +36,8 @@
 
 #define  INCLUDE_FROM_UMETER_C
 #include "UMeter.h"
-#include "Lib/INI/umeter_ini.h"
-#include "Lib/Inputs/umeter_adc.h"
+#include "lib/INI/umeter_ini.h"
+#include "lib/Inputs/umeter_adc.h"
 #include <util/delay.h>
 
 #define DEBUG 1

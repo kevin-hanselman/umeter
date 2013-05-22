@@ -127,15 +127,15 @@ LUFA_OPTS += -D INTERRUPT_CONTROL_ENDPOINT
 # List C source files here. (C dependencies are automatically generated.)
 SRC = $(TARGET).c \
 	  Descriptors.c \
-	  Lib/MassStorage/SCSI.c \
-	  Lib/FatSD/SDCardManager.c \
-	  Lib/FatSD/sd_raw.c \
-	  Lib/FatSD/partition.c \
-	  Lib/FatSD/fat.c \
-	  Lib/FatSD/byteordering.c \
-	  Lib/Inputs/umeter_adc.c \
-	  Lib/INI/ini.c \
-	  Lib/INI/umeter_ini.c \
+	  lib/MassStorage/SCSI.c \
+	  lib/FatSD/SDCardManager.c \
+	  lib/FatSD/sd_raw.c \
+	  lib/FatSD/partition.c \
+	  lib/FatSD/fat.c \
+	  lib/FatSD/byteordering.c \
+	  lib/Inputs/umeter_adc.c \
+	  lib/INI/ini.c \
+	  lib/INI/umeter_ini.c \
 	  $(LUFA_PATH)/LUFA/Drivers/Peripheral/SerialStream.c         \
 	  $(LUFA_PATH)/LUFA/Drivers/USB/LowLevel/DevChapter9.c        \
 	  $(LUFA_PATH)/LUFA/Drivers/USB/LowLevel/Endpoint.c           \
