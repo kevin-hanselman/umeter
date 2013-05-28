@@ -1,0 +1,283 @@
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Mon 25 Mar 2013 04:11:14 PM EDT
+
+BeginCmp
+TimeStamp = /50AA9F9B;
+Reference = C1;
+ValeurCmp = 10pF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AA9FA8;
+Reference = C2;
+ValeurCmp = 10pF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AAA59B;
+Reference = C3;
+ValeurCmp = 1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AAA5B8;
+Reference = C4;
+ValeurCmp = 10uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AAA541;
+Reference = C5;
+ValeurCmp = 1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50B3A1EE;
+Reference = C6;
+ValeurCmp = 1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5123AB17;
+Reference = D1;
+ValeurCmp = DIODESCH;
+IdModule  = SOT23;
+EndCmp
+
+BeginCmp
+TimeStamp = /5123AAEF;
+Reference = D2;
+ValeurCmp = DIODESCH;
+IdModule  = SOT23;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F5B69F;
+Reference = D3;
+ValeurCmp = LED;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F5B718;
+Reference = D4;
+ValeurCmp = LED;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F5B71D;
+Reference = D5;
+ValeurCmp = LED;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F5B70D;
+Reference = D6;
+ValeurCmp = LED;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AA9C72;
+Reference = J1;
+ValeurCmp = USB;
+IdModule  = USB_MINI_B_ED2992CT-ND;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E9832;
+Reference = K1;
+ValeurCmp = S1;
+IdModule  = 3PIN_HEADER_100mil;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E9844;
+Reference = K2;
+ValeurCmp = S2;
+IdModule  = 3PIN_HEADER_100mil;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E984A;
+Reference = K3;
+ValeurCmp = S3;
+IdModule  = 3PIN_HEADER_100mil;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E9850;
+Reference = K4;
+ValeurCmp = S4;
+IdModule  = 3PIN_HEADER_100mil;
+EndCmp
+
+BeginCmp
+TimeStamp = /511D4DA6;
+Reference = K5;
+ValeurCmp = MODE;
+IdModule  = SPARKFUN_COM-10860;
+EndCmp
+
+BeginCmp
+TimeStamp = /511D496D;
+Reference = P1;
+ValeurCmp = SD;
+IdModule  = MICROSD_MOLEX_5040771891;
+EndCmp
+
+BeginCmp
+TimeStamp = /511D52E7;
+Reference = P2;
+ValeurCmp = MCP1825;
+IdModule  = SOT223;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F59D5F;
+Reference = P3;
+ValeurCmp = DEBUG;
+IdModule  = 4PIN_HEADER_100mil;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F81DBC;
+Reference = P4;
+ValeurCmp = PROG;
+IdModule  = 6PIN_HEADER_100mil;
+EndCmp
+
+BeginCmp
+TimeStamp = /511D4CA7;
+Reference = P5;
+ValeurCmp = RESET;
+IdModule  = SWITCH_FSM4JSMA;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AAA012;
+Reference = R1;
+ValeurCmp = 22;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AAA006;
+Reference = R2;
+ValeurCmp = 22;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50B3F05E;
+Reference = R3;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50B3F06C;
+Reference = R4;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E95A0;
+Reference = R5;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E959A;
+Reference = R6;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E95D3;
+Reference = R7;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E95CD;
+Reference = R8;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E9606;
+Reference = R9;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /511E9600;
+Reference = R10;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50B39CA4;
+Reference = R11;
+ValeurCmp = 1k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F5B6D9;
+Reference = R12;
+ValeurCmp = 1k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F5B70C;
+Reference = R13;
+ValeurCmp = 1k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F5B71C;
+Reference = R14;
+ValeurCmp = 1k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50F5B719;
+Reference = R15;
+ValeurCmp = 1k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AA9C20;
+Reference = U1;
+ValeurCmp = ATMEGA32U4;
+IdModule  = TQFP44;
+EndCmp
+
+BeginCmp
+TimeStamp = /50AA9CBE;
+Reference = X1;
+ValeurCmp = 16MHz;
+IdModule  = CSM-3X;
+EndCmp
+
+EndListe
